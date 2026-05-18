@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Panini Mundial 2026</title>
+    <title>GMT QA SYSTEM - Control Panini Mundial 2026</title>
     <style>
         :root {
             --primary-color: #1a365d;
@@ -29,100 +29,135 @@
         body {
             background-color: var(--bg-light);
             color: var(--text-main);
-            padding: 20px;
-            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        header {
+        /* PANTALLA DE LOGIN (INICIO DE SESIÓN) */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
         }
 
-        header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+        .login-card h1 {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
             letter-spacing: 0.5px;
         }
 
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
-        /* Sección de login/perfiles */
-        .auth-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        .login-card p {
+            font-size: 0.9rem;
+            color: #718096;
             margin-bottom: 25px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
         }
 
-        @media(min-width: 768px) {
-            .auth-container {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-            }
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
         }
 
-        .user-input-group {
-            display: flex;
-            gap: 10px;
-            flex-grow: 1;
-            max-width: 500px;
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
         }
 
-        input[type="text"], input[type="password"], select {
+        .form-group input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 10pt;
             outline: none;
             transition: border-color 0.2s;
         }
 
-        input[type="text"]:focus, input[type="password"]:focus, select:focus {
+        .form-group input:focus {
             border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
         }
 
-        button {
-            padding: 10px 20px;
+        .login-btn {
+            width: 100%;
+            padding: 12px;
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 11pt;
             cursor: pointer;
-            font-size: 10pt;
             transition: background 0.2s;
-            white-space: nowrap;
+            margin-top: 10px;
         }
 
-        button:hover {
+        .login-btn:hover {
             background-color: var(--primary-color);
         }
 
-        .active-user-badge {
-            background-color: #edf2f7;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: var(--primary-color);
-            border: 1px solid #cbd5e0;
+        /* CONTENIDOR PRINCIPAL DE LA APP (OCULTO AL INICIO) */
+        .app-container {
+            display: none; /* Se activa mediante JS */
+            padding: 20px;
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        /* Dashboard de Métricas */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 { font-size: 1.5rem; }
+        header p { font-size: 0.85rem; opacity: 0.9; }
+
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* DASHBOARD Y FILTROS */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -136,24 +171,11 @@
             border-radius: 10px;
             text-align: center;
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
         }
 
-        .kpi-card .value {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-top: 5px;
-        }
+        .kpi-card .value { font-size: 1.6rem; font-weight: bold; color: var(--primary-color); }
+        .kpi-card .label { font-size: 0.85rem; color: #718096; text-transform: uppercase; font-weight: 600; }
 
-        .kpi-card .label {
-            font-size: 0.85rem;
-            color: #718096;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        /* Controles de Filtros */
         .filter-section {
             background: var(--card-bg);
             padding: 15px;
@@ -166,12 +188,15 @@
             align-items: center;
         }
 
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
+        .filter-group { flex: 1; min-width: 200px; }
+
+        select {
+            width: 100%; padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 10pt; outline: none;
         }
 
-        /* Vista de cuadrícula de Estampas */
+        /* CUADRÍCULA DE CROMOS */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -187,281 +212,118 @@
             cursor: pointer;
             user-select: none;
             transition: transform 0.15s, box-shadow 0.15s;
-            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             min-height: 100px;
         }
 
-        .sticker-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
-        }
+        .sticker-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.04); }
+        .sticker-id { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
+        .sticker-desc { font-size: 0.75rem; color: #4a5568; margin-bottom: 6px; }
+        .sticker-type { font-size: 0.65rem; background-color: #edf2f7; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #4a5568; }
 
-        .sticker-id {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            margin-bottom: 4px;
-        }
+        .sticker-card.status-si { background-color: var(--have-color) !important; border-color: #9ae6b4 !important; }
+        .sticker-card.status-si .sticker-id, .sticker-card.status-si .sticker-desc, .sticker-card.status-si .sticker-type { color: var(--have-text) !important; }
+        .sticker-card.status-si .sticker-type { background-color: rgba(255,255,255,0.4); }
 
-        .sticker-desc {
-            font-size: 0.75rem;
-            color: #4a5568;
-            line-height: 1.2;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-
-        .sticker-type {
-            font-size: 0.65rem;
-            background-color: #edf2f7;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-            align-self: center;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        /* Estados de posesión */
-        .sticker-card.status-si {
-            background-color: var(--have-color) !important;
-            border-color: #9ae6b4 !important;
-        }
-        .sticker-card.status-si .sticker-id,
-        .sticker-card.status-si .sticker-desc,
-        .sticker-card.status-si .sticker-type {
-            color: var(--have-text) !important;
-        }
-        .sticker-card.status-si .sticker-type {
-            background-color: rgba(255,255,255,0.4);
-        }
-
-        .sticker-card.status-no {
-            background-color: var(--card-bg);
-        }
-
-        /* Ventana emergente integrada */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.2s, visibility 0.2s;
-        }
-        .modal-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .modal-box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-        .modal-box h3 { margin-bottom: 10px; color: var(--primary-color); }
-        .modal-box p { font-size: 0.9rem; color: #4a5568; margin-bottom: 15px; }
-        .modal-box input { margin-bottom: 15px; text-align: center; font-size: 1.1rem; letter-spacing: 2px; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
-
-        /* Panel de Control de Contraseñas (Auditoría) */
-        .admin-panel {
-            background: #fffaf0;
-            border: 1px dashed #dd6b20;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 40px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .admin-panel h2 {
-            font-size: 1.2rem;
-            color: #dd6b20;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            background: white;
-            font-size: 0.9rem;
-        }
-        .admin-table th, .admin-table td {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            text-align: left;
-        }
-        .admin-table th {
-            background-color: #feebc8;
-            color: #744210;
-        }
-
-        /* Notificación Guardado */
         .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #2d3748;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: none;
-            z-index: 1000;
-            font-size: 0.9rem;
+            position: fixed; bottom: 20px; right: 20px; background-color: #2d3748; color: white;
+            padding: 12px 24px; border-radius: 6px; display: none; z-index: 10000; font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>GMT QA SYSTEM</h1>
-        <p>Control Multi-Perfil de Estampas - Panini Copa Mundial 2026</p>
-    </header>
-
-    <div class="auth-container">
-        <div class="user-input-group">
-            <input type="text" id="usernameInput" placeholder="Ingresa tu nombre o apodo para iniciar...">
-            <button onclick="loginUser()">Ingresar / Crear</button>
-        </div>
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <label for="profileSelect" style="font-size: 0.9rem; font-weight: bold; color: #4a5568;">Cambiar de Perfil:</label>
-            <select id="profileSelect" style="width: auto; min-width: 150px;" onchange="switchProfile(this.value)">
-                </select>
-            <div class="active-user-badge" id="activeUserLabel">Perfil: Invitado</div>
-        </div>
-    </div>
-
-    <div class="dashboard-grid">
-        <div class="kpi-card">
-            <div class="label">Total Álbum</div>
-            <div class="value" id="kpiTotal">0</div>
-        </div>
-        <div class="kpi-card" style="background-color: #f0fff4;">
-            <div class="label" style="color: #276749;">Tengo</div>
-            <div class="value" id="kpiTengo" style="color: #276749;">0</div>
-        </div>
-        <div class="kpi-card" style="background-color: #fff5f5;">
-            <div class="label" style="color: #9b2c2c;">Faltan</div>
-            <div class="value" id="kpiFaltan" style="color: #9b2c2c;">0</div>
-        </div>
-        <div class="kpi-card" style="background-color: #ebf8ff;">
-            <div class="label" style="color: #2b6cb0;">Progreso</div>
-            <div class="value" id="kpiProgreso" style="color: #2b6cb0;">0%</div>
-        </div>
-    </div>
-
-    <div class="filter-section">
-        <div class="filter-group">
-            <input type="text" id="searchBar" placeholder="Buscar por código o descripción (Ej: MEX, Escudo)..." oninput="filterStickers()">
-        </div>
-        <div class="filter-group" style="max-width: 250px;">
-            <select id="groupFilter" onchange="filterStickers()">
-                <option value="ALL">Todas las Secciones / Países</option>
-                </select>
-        </div>
-        <div class="filter-group" style="max-width: 200px;">
-            <select id="statusFilter" onchange="filterStickers()">
-                <option value="ALL">Todos los Estados</option>
-                <option value="SI">Ya las tengo</option>
-                <option value="NO">Me faltan</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="items-grid" id="stickersGrid">
-        </div>
-
-    <div class="admin-panel">
-        <h2>🔑 Panel Supervisor: Registro de Contraseñas</h2>
-        <p style="font-size: 0.85rem; color: #7b341e;">Aquí se enlistan los usuarios guardados en este dispositivo con sus respectivas claves asignadas en tiempo real:</p>
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Usuario / Colaborador</th>
-                    <th>Contraseña Asignada</th>
-                </tr>
-            </thead>
-            <tbody id="adminTableBody">
-                <tr>
-                    <td colspan="2" style="text-align: center; color: #a0aec0;">Ningún perfil registrado aún</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="modal-overlay" id="securityModal">
-        <div class="modal-box">
-            <h3 id="modalTitle">Validación de Perfil</h3>
-            <p id="modalDescription">Ingresa tu contraseña para continuar:</p>
-            <input type="password" id="modalPasswordInput" placeholder="••••">
-            <div class="modal-buttons">
-                <button onclick="closeSecurityModal()" style="background-color: #e2e8f0; color: #4a5568;">Cancelar</button>
-                <button onclick="submitSecurityModal()" style="background-color: #dd6b20;">Confirmar</button>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>GMT QA SYSTEM</h1>
+            <p>Control de Estampas - Panini Mundial 2026</p>
+            
+            <div class="form-group">
+                <label for="usernameField">Nombre o Apodo:</label>
+                <input type="text" id="usernameField" placeholder="Ej: Carlos_QA">
+            </div>
+            
+            <div class="form-group">
+                <label for="passwordField">Contraseña:</label>
+                <input type="password" id="passwordField" placeholder="••••">
+            </div>
+            
+            <button class="login-btn" onclick="handleAuth()">Ingresar / Registrar Perfil</button>
+            <div style="margin-top: 15px; font-size: 0.78rem; color: #a0aec0; line-height: 1.3;">
+                *Si tu apodo no existe, se registrará como nuevo perfil con la contraseña que coloques.
             </div>
         </div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <header>
+            <div>
+                <h1>GMT QA SYSTEM</h1>
+                <p>Usuario Activo: <span id="sessionUserLabel" style="font-weight: bold; text-decoration: underline;">Invitado</span></p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="kpi-card">
+                <div class="label">Total Álbum</div>
+                <div class="value" id="kpiTotal">0</div>
+            </div>
+            <div class="kpi-card" style="background-color: #f0fff4;">
+                <div class="label" style="color: #276749;">Tengo</div>
+                <div class="value" id="kpiTengo" style="color: #276749;">0</div>
+            </div>
+            <div class="kpi-card" style="background-color: #fff5f5;">
+                <div class="label" style="color: #9b2c2c;">Faltan</div>
+                <div class="value" id="kpiFaltan" style="color: #9b2c2c;">0</div>
+            </div>
+            <div class="kpi-card" style="background-color: #ebf8ff;">
+                <div class="label" style="color: #2b6cb0;">Progreso</div>
+                <div class="value" id="kpiProgreso" style="color: #2b6cb0;">0%</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <input type="text" id="searchBar" style="width:100%; padding:10px 14px; border:1px solid var(--border-color); border-radius:6px;" placeholder="Buscar por código o descripción..." oninput="filterStickers()">
+            </div>
+            <div class="filter-group" style="max-width: 250px;">
+                <select id="groupFilter" onchange="filterStickers()">
+                    <option value="ALL">Todas las Secciones / Países</option>
+                </select>
+            </div>
+            <div class="filter-group" style="max-width: 200px;">
+                <select id="statusFilter" onchange="filterStickers()">
+                    <option value="ALL">Todos los Estados</option>
+                    <option value="SI">Ya las tengo</option>
+                    <option value="NO">Me faltan</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="items-grid" id="stickersGrid"></div>
     </div>
 
     <div class="toast" id="toastMessage">Progreso guardado automáticamente.</div>
 
     <script>
-        // Estructura extraída del listado de estampas original
-        const STICKERS_BASE = [
-            {"id": "ARG 1", "desc": "Escudo Oficial de Argentina", "tipo": "Escudo Holográfico", "grupo": "ARG"},
-            {"id": "ARG 2", "desc": "Jugador 2 - Argentina", "tipo": "Regular", "grupo": "ARG"},
-            {"id": "ARG 3", "desc": "Jugador 3 - Argentina", "tipo": "Regular", "grupo": "ARG"},
-            {"id": "ARG 4", "desc": "Jugador 4 - Argentina", "tipo": "Regular", "grupo": "ARG"},
-            {"id": "ARG 5", "desc": "Jugador 5 - Argentina", "tipo": "Regular", "grupo": "ARG"},
-            {"id": "ARG 13", "desc": "Foto de Equipo (Squad) - Argentina", "tipo": "Equipo Completo", "grupo": "ARG"},
-            {"id": "ARG 17", "desc": "Jugador 17 - Argentina", "tipo": "Regular", "grupo": "ARG"},
-            {"id": "AUS 1", "desc": "Escudo Oficial de Australia", "tipo": "Escudo Holográfico", "grupo": "AUS"},
-            {"id": "AUS 2", "desc": "Jugador 2 - Australia", "tipo": "Regular", "grupo": "AUS"},
-            {"id": "AUS 13", "desc": "Foto de Equipo (Squad) - Australia", "tipo": "Equipo Completo", "grupo": "AUS"},
-            {"id": "AUT 1", "desc": "Escudo Oficial de Austria", "tipo": "Escudo Holográfico", "grupo": "AUT"},
-            {"id": "BEL 1", "desc": "Escudo Oficial de Bélgica", "tipo": "Escudo Holográfico", "grupo": "BEL"},
-            {"id": "BRA 1", "desc": "Escudo Oficial de Brasil", "tipo": "Escudo Holográfico", "grupo": "BRA"},
-            {"id": "CAN 1", "desc": "Escudo Oficial de Canadá", "tipo": "Escudo Holográfico", "grupo": "CAN"},
-            {"id": "CHL 1", "desc": "Escudo Oficial de Chile", "tipo": "Escudo Holográfico", "grupo": "CHL"},
-            {"id": "CIV 1", "desc": "Escudo Oficial de Costa de Marfil", "tipo": "Escudo Holográfico", "grupo": "CIV"},
-            {"id": "CMR 1", "desc": "Escudo Oficial de Camerún", "tipo": "Escudo Holográfico", "grupo": "CMR"},
-            {"id": "CC 1", "desc": "Estampa Comercial Coca-Cola 1", "tipo": "Especial Comercial", "grupo": "CC"},
-            {"id": "COL 1", "desc": "Escudo Oficial de Colombia", "tipo": "Escudo Holográfico", "grupo": "COL"},
-            {"id": "CRC 1", "desc": "Escudo Oficial de Costa Rica", "tipo": "Escudo Holográfico", "grupo": "CRC"},
-            {"id": "VEN 1", "desc": "Escudo Oficial de Venezuela", "tipo": "Escudo Holográfico", "grupo": "VEN"},
-            {"id": "WAL 1", "desc": "Escudo Oficial de Gales", "tipo": "Escudo Holográfico", "grupo": "WAL"}
+        // Inyección dinámica de la estructura del Excel
+        const STICKERS_BASE = [{"id": "ARG 1", "desc": "Escudo Oficial de Argentina", "tipo": "Escudo Holográfico", "grupo": "ARG"}, {"id": "ARG 2", "desc": "Jugador 2 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 3", "desc": "Jugador 3 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 4", "desc": "Jugador 4 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 5", "desc": "Jugador 5 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 6", "desc": "Jugador 6 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 7", "desc": "Jugador 7 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 8", "desc": "Jugador 8 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 9", "desc": "Jugador 9 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 10", "desc": "Jugador 10 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 11", "desc": "Jugador 11 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 12", "desc": "Jugador 12 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 13", "desc": "Foto de Equipo (Squad) - Argentina", "tipo": "Equipo Completo", "grupo": "ARG"}, {"id": "ARG 14", "desc": "Jugador 14 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 15", "desc": "Jugador 15 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 16", "desc": "Jugador 16 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 17", "desc": "Jugador 17 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 18", "desc": "Jugador 18 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 19", "desc": "Jugador 19 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "ARG 20", "desc": "Jugador 20 - Argentina", "tipo": "Regular", "grupo": "ARG"}, {"id": "AUS 1", "desc": "Escudo Oficial de Australia", "tipo": "Escudo Holográfico", "grupo": "AUS"}, {"id": "AUS 2", "desc": "Jugador 2 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 3", "desc": "Jugador 3 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 4", "desc": "Jugador 4 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 5", "desc": "Jugador 5 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 6", "desc": "Jugador 6 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 7", "desc": "Jugador 7 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 8", "desc": "Jugador 8 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 9", "desc": "Jugador 9 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 10", "desc": "Jugador 10 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 11", "desc": "Jugador 11 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 12", "desc": "Jugador 12 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 13", "desc": "Foto de Equipo (Squad) - Australia", "tipo": "Equipo Completo", "grupo": "AUS"}, {"id": "AUS 14", "desc": "Jugador 14 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 15", "desc": "Jugador 15 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 16", "desc": "Jugador 16 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 17", "desc": "Jugador 17 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 18", "desc": "Jugador 18 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 19", "desc": "Jugador 19 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUS 20", "desc": "Jugador 20 - Australia", "tipo": "Regular", "grupo": "AUS"}, {"id": "AUT 1", "desc": "Escudo Oficial de Austria", "tipo": "Escudo Holográfico", "grupo": "AUT"}, {"id": "AUT 2", "desc": "Jugador 2 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 3", "desc": "Jugador 3 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 4", "desc": "Jugador 4 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 5", "desc": "Jugador 5 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 6", "desc": "Jugador 6 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 7", "desc": "Jugador 7 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 8", "desc": "Jugador 8 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 9", "desc": "Jugador 9 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 10", "desc": "Jugador 10 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 11", "desc": "Jugador 11 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 12", "desc": "Jugador 12 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 13", "desc": "Foto de Equipo (Squad) - Austria", "tipo": "Equipo Completo", "grupo": "AUT"}, {"id": "AUT 14", "desc": "Jugador 14 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 15", "desc": "Jugador 15 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 16", "desc": "Jugador 16 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 17", "desc": "Jugador 17 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 18", "desc": "Jugador 18 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 19", "desc": "Jugador 19 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "AUT 20", "desc": "Jugador 20 - Austria", "tipo": "Regular", "grupo": "AUT"}, {"id": "BEL 1", "desc": "Escudo Oficial de Bélgica", "tipo": "Escudo Holográfico", "grupo": "BEL"}, {"id": "BEL 2", "desc": "Jugador 2 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 3", "desc": "Jugador 3 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 4", "desc": "Jugador 4 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 5", "desc": "Jugador 5 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 6", "desc": "Jugador 6 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 7", "desc": "Jugador 7 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 8", "desc": "Jugador 8 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 9", "desc": "Jugador 9 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 10", "desc": "Jugador 10 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 11", "desc": "Jugador 11 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 12", "desc": "Jugador 12 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 13", "desc": "Foto de Equipo (Squad) - Bélgica", "tipo": "Equipo Completo", "grupo": "BEL"}, {"id": "BEL 14", "desc": "Jugador 14 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 15", "desc": "Jugador 15 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 16", "desc": "Jugador 16 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 17", "desc": "Jugador 17 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 18", "desc": "Jugador 18 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 19", "desc": "Jugador 19 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BEL 20", "desc": "Jugador 20 - Bélgica", "tipo": "Regular", "grupo": "BEL"}, {"id": "BRA 1", "desc": "Escudo Oficial de Brasil", "tipo": "Escudo Holográfico", "grupo": "BRA"}, {"id": "BRA 2", "desc": "Jugador 2 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 3", "desc": "Jugador 3 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 4", "desc": "Jugador 4 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 5", "desc": "Jugador 5 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 6", "desc": "Jugador 6 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 7", "desc": "Jugador 7 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 8", "desc": "Jugador 8 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 9", "desc": "Jugador 9 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 10", "desc": "Jugador 10 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 11", "desc": "Jugador 11 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 12", "desc": "Jugador 12 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 13", "desc": "Foto de Equipo (Squad) - Brasil", "tipo": "Equipo Completo", "grupo": "BRA"}, {"id": "BRA 14", "desc": "Jugador 14 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 15", "desc": "Jugador 15 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 16", "desc": "Jugador 16 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 17", "desc": "Jugador 17 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 18", "desc": "Jugador 18 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 19", "desc": "Jugador 19 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "BRA 20", "desc": "Jugador 20 - Brasil", "tipo": "Regular", "grupo": "BRA"}, {"id": "CAN 1", "desc": "Escudo Oficial de Canadá", "tipo": "Escudo Holográfico", "grupo": "CAN"}, {"id": "CAN 2", "desc": "Jugador 2 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 3", "desc": "Jugador 3 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 4", "desc": "Jugador 4 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 5", "desc": "Jugador 5 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 6", "desc": "Jugador 6 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 7", "desc": "Jugador 7 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 8", "desc": "Jugador 8 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 9", "desc": "Jugador 9 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 10", "desc": "Jugador 10 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 11", "desc": "Jugador 11 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 12", "desc": "Jugador 12 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 13", "desc": "Foto de Equipo (Squad) - Canadá", "tipo": "Equipo Completo", "grupo": "CAN"}, {"id": "CAN 14", "desc": "Jugador 14 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 15", "desc": "Jugador 15 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 16", "desc": "Jugador 16 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 17", "desc": "Jugador 17 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 18", "desc": "Jugador 18 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 19", "desc": "Jugador 19 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CAN 20", "desc": "Jugador 20 - Canadá", "tipo": "Regular", "grupo": "CAN"}, {"id": "CHL 1", "desc": "Escudo Oficial de Chile", "tipo": "Escudo Holográfico", "grupo": "CHL"}, {"id": "CHL 2", "desc": "Jugador 2 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 3", "desc": "Jugador 3 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 4", "desc": "Jugador 4 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 5", "desc": "Jugador 5 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 6", "desc": "Jugador 6 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 7", "desc": "Jugador 7 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 8", "desc": "Jugador 8 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 9", "desc": "Jugador 9 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 10", "desc": "Jugador 10 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 11", "desc": "Jugador 11 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 12", "desc": "Jugador 12 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 13", "desc": "Foto de Equipo (Squad) - Chile", "tipo": "Equipo Completo", "grupo": "CHL"}, {"id": "CHL 14", "desc": "Jugador 14 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 15", "desc": "Jugador 15 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 16", "desc": "Jugador 16 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 17", "desc": "Jugador 17 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 18", "desc": "Jugador 18 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 19", "desc": "Jugador 19 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CHL 20", "desc": "Jugador 20 - Chile", "tipo": "Regular", "grupo": "CHL"}, {"id": "CIV 1", "desc": "Escudo Oficial de Costa de Marfil", "tipo": "Escudo Holográfico", "grupo": "CIV"}, {"id": "CIV 2", "desc": "Jugador 2 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 3", "desc": "Jugador 3 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 4", "desc": "Jugador 4 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 5", "desc": "Jugador 5 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 6", "desc": "Jugador 6 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 7", "desc": "Jugador 7 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 8", "desc": "Jugador 8 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 9", "desc": "Jugador 9 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 10", "desc": "Jugador 10 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 11", "desc": "Jugador 11 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 12", "desc": "Jugador 12 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 13", "desc": "Foto de Equipo (Squad) - Costa de Marfil", "tipo": "Equipo Completo", "grupo": "CIV"}, {"id": "CIV 14", "desc": "Jugador 14 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 15", "desc": "Jugador 15 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 16", "desc": "Jugador 16 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 17", "desc": "Jugador 17 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 18", "desc": "Jugador 18 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 19", "desc": "Jugador 19 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CIV 20", "desc": "Jugador 20 - Costa de Marfil", "tipo": "Regular", "grupo": "CIV"}, {"id": "CMR 1", "desc": "Escudo Oficial de Camerún", "tipo": "Escudo Holográfico", "grupo": "CMR"}, {"id": "CMR 2", "desc": "Jugador 2 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 3", "desc": "Jugador 3 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 4", "desc": "Jugador 4 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 5", "desc": "Jugador 5 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 6", "desc": "Jugador 6 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 7", "desc": "Jugador 7 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 8", "desc": "Jugador 8 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 9", "desc": "Jugador 9 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 10", "desc": "Jugador 10 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 11", "desc": "Jugador 11 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 12", "desc": "Jugador 12 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 13", "desc": "Foto de Equipo (Squad) - Camerún", "tipo": "Equipo Completo", "grupo": "CMR"}, {"id": "CMR 14", "desc": "Jugador 14 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 15", "desc": "Jugador 15 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 16", "desc": "Jugador 16 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 17", "desc": "Jugador 17 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 18", "desc": "Jugador 18 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 19", "desc": "Jugador 19 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CMR 20", "desc": "Jugador 20 - Camerún", "tipo": "Regular", "grupo": "CMR"}, {"id": "CC 1", "desc": "Estampa Comercial Coca-Cola 1", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 2", "desc": "Estampa Comercial Coca-Cola 2", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 3", "desc": "Estampa Comercial Coca-Cola 3", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 4", "desc": "Estampa Comercial Coca-Cola 4", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 5", "desc": "Estampa Comercial Coca-Cola 5", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 6", "desc": "Estampa Comercial Coca-Cola 6", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 7", "desc": "Estampa Comercial Coca-Cola 7", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 8", "desc": "Estampa Comercial Coca-Cola 8", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 9", "desc": "Estampa Comercial Coca-Cola 9", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 10", "desc": "Estampa Comercial Coca-Cola 10", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 11", "desc": "Estampa Comercial Coca-Cola 11", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 12", "desc": "Estampa Comercial Coca-Cola 12", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 13", "desc": "Estampa Comercial Coca-Cola 13", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "CC 14", "desc": "Estampa Comercial Coca-Cola 14", "tipo": "Especial Comercial", "grupo": "CC"}, {"id": "COL 1", "desc": "Escudo Oficial de Colombia", "tipo": "Escudo Holográfico", "grupo": "COL"}, {"id": "COL 2", "desc": "Jugador 2 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 3", "desc": "Jugador 3 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 4", "desc": "Jugador 4 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 5", "desc": "Jugador 5 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 6", "desc": "Jugador 6 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 7", "desc": "Jugador 7 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 8", "desc": "Jugador 8 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 9", "desc": "Jugador 9 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 10", "desc": "Jugador 10 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 11", "desc": "Jugador 11 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 12", "desc": "Jugador 12 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 13", "desc": "Foto de Equipo (Squad) - Colombia", "tipo": "Equipo Completo", "grupo": "COL"}, {"id": "COL 14", "desc": "Jugador 14 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 15", "desc": "Jugador 15 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 16", "desc": "Jugador 16 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 17", "desc": "Jugador 17 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 18", "desc": "Jugador 18 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 19", "desc": "Jugador 19 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "COL 20", "desc": "Jugador 20 - Colombia", "tipo": "Regular", "grupo": "COL"}, {"id": "CRC 1", "desc": "Escudo Oficial de Costa Rica", "tipo": "Escudo Holográfico", "grupo": "CRC"}, {"id": "CRC 2", "desc": "Jugador 2 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 3", "desc": "Jugador 3 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 4", "desc": "Jugador 4 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 5", "desc": "Jugador 5 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 6", "desc": "Jugador 6 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 7", "desc": "Jugador 7 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 8", "desc": "Jugador 8 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 9", "desc": "Jugador 9 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 10", "desc": "Jugador 10 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 11", "desc": "Jugador 11 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 12", "desc": "Jugador 12 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 13", "desc": "Foto de Equipo (Squad) - Costa Rica", "tipo": "Equipo Completo", "grupo": "CRC"}, {"id": "CRC 14", "desc": "Jugador 14 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 15", "desc": "Jugador 15 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 16", "desc": "Jugador 16 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 17", "desc": "Jugador 17 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 18", "desc": "Jugador 18 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 19", "desc": "Jugador 19 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRC 20", "desc": "Jugador 20 - Costa Rica", "tipo": "Regular", "grupo": "CRC"}, {"id": "CRO 1", "desc": "Escudo Oficial de Croacia", "tipo": "Escudo Holográfico", "grupo": "CRO"}, {"id": "CRO 2", "desc": "Jugador 2 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 3", "desc": "Jugador 3 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 4", "desc": "Jugador 4 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 5", "desc": "Jugador 5 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 6", "desc": "Jugador 6 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 7", "desc": "Jugador 7 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 8", "desc": "Jugador 8 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 9", "desc": "Jugador 9 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 10", "desc": "Jugador 10 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 11", "desc": "Jugador 11 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 12", "desc": "Jugador 12 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 13", "desc": "Foto de Equipo (Squad) - Croacia", "tipo": "Equipo Completo", "grupo": "CRO"}, {"id": "CRO 14", "desc": "Jugador 14 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 15", "desc": "Jugador 15 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 16", "desc": "Jugador 16 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 17", "desc": "Jugador 17 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 18", "desc": "Jugador 18 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 19", "desc": "Jugador 19 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "CRO 20", "desc": "Jugador 20 - Croacia", "tipo": "Regular", "grupo": "CRO"}, {"id": "DEN 1", "desc": "Escudo Oficial de Dinamarca", "tipo": "Escudo Holográfico", "grupo": "DEN"}, {"id": "DEN 2", "desc": "Jugador 2 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 3", "desc": "Jugador 3 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 4", "desc": "Jugador 4 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 5", "desc": "Jugador 5 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 6", "desc": "Jugador 6 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 7", "desc": "Jugador 7 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 8", "desc": "Jugador 8 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 9", "desc": "Jugador 9 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 10", "desc": "Jugador 10 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 11", "desc": "Jugador 11 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 12", "desc": "Jugador 12 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 13", "desc": "Foto de Equipo (Squad) - Dinamarca", "tipo": "Equipo Completo", "grupo": "DEN"}, {"id": "DEN 14", "desc": "Jugador 14 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 15", "desc": "Jugador 15 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 16", "desc": "Jugador 16 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 17", "desc": "Jugador 17 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 18", "desc": "Jugador 18 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 19", "desc": "Jugador 19 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "DEN 20", "desc": "Jugador 20 - Dinamarca", "tipo": "Regular", "grupo": "DEN"}, {"id": "ECU 1", "desc": "Escudo Oficial de Ecuador", "tipo": "Escudo Holográfico", "grupo": "ECU"}, {"id": "ECU 2", "desc": "Jugador 2 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 3", "desc": "Jugador 3 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 4", "desc": "Jugador 4 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 5", "desc": "Jugador 5 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 6", "desc": "Jugador 6 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 7", "desc": "Jugador 7 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 8", "desc": "Jugador 8 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 9", "desc": "Jugador 9 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 10", "desc": "Jugador 10 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 11", "desc": "Jugador 11 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 12", "desc": "Jugador 12 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 13", "desc": "Foto de Equipo (Squad) - Ecuador", "tipo": "Equipo Completo", "grupo": "ECU"}, {"id": "ECU 14", "desc": "Jugador 14 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 15", "desc": "Jugador 15 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 16", "desc": "Jugador 16 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 17", "desc": "Jugador 17 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 18", "desc": "Jugador 18 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 19", "desc": "Jugador 19 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "ECU 20", "desc": "Jugador 20 - Ecuador", "tipo": "Regular", "grupo": "ECU"}, {"id": "EGY 1", "desc": "Escudo Oficial de Egipto", "tipo": "Escudo Holográfico", "grupo": "EGY"}, {"id": "EGY 2", "desc": "Jugador 2 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 3", "desc": "Jugador 3 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 4", "desc": "Jugador 4 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 5", "desc": "Jugador 5 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 6", "desc": "Jugador 6 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 7", "desc": "Jugador 7 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 8", "desc": "Jugador 8 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 9", "desc": "Jugador 9 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 10", "desc": "Jugador 10 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 11", "desc": "Jugador 11 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 12", "desc": "Jugador 12 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 13", "desc": "Foto de Equipo (Squad) - Egipto", "tipo": "Equipo Completo", "grupo": "EGY"}, {"id": "EGY 14", "desc": "Jugador 14 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 15", "desc": "Jugador 15 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 16", "desc": "Jugador 16 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 17", "desc": "Jugador 17 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 18", "desc": "Jugador 18 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 19", "desc": "Jugador 19 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "EGY 20", "desc": "Jugador 20 - Egipto", "tipo": "Regular", "grupo": "EGY"}, {"id": "ENG 1", "desc": "Escudo Oficial de Inglaterra", "tipo": "Escudo Holográfico", "grupo": "ENG"}, {"id": "ENG 2", "desc": "Jugador 2 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 3", "desc": "Jugador 3 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 4", "desc": "Jugador 4 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 5", "desc": "Jugador 5 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 6", "desc": "Jugador 6 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 7", "desc": "Jugador 7 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 8", "desc": "Jugador 8 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 9", "desc": "Jugador 9 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 10", "desc": "Jugador 10 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 11", "desc": "Jugador 11 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 12", "desc": "Jugador 12 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 13", "desc": "Foto de Equipo (Squad) - Inglaterra", "tipo": "Equipo Completo", "grupo": "ENG"}, {"id": "ENG 14", "desc": "Jugador 14 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 15", "desc": "Jugador 15 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 16", "desc": "Jugador 16 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 17", "desc": "Jugador 17 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 18", "desc": "Jugador 18 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 19", "desc": "Jugador 19 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ENG 20", "desc": "Jugador 20 - Inglaterra", "tipo": "Regular", "grupo": "ENG"}, {"id": "ESP 1", "desc": "Escudo Oficial de España", "tipo": "Escudo Holográfico", "grupo": "ESP"}, {"id": "ESP 2", "desc": "Jugador 2 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 3", "desc": "Jugador 3 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 4", "desc": "Jugador 4 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 5", "desc": "Jugador 5 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 6", "desc": "Jugador 6 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 7", "desc": "Jugador 7 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 8", "desc": "Jugador 8 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 9", "desc": "Jugador 9 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 10", "desc": "Jugador 10 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 11", "desc": "Jugador 11 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 12", "desc": "Jugador 12 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 13", "desc": "Foto de Equipo (Squad) - España", "tipo": "Equipo Completo", "grupo": "ESP"}, {"id": "ESP 14", "desc": "Jugador 14 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 15", "desc": "Jugador 15 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 16", "desc": "Jugador 16 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 17", "desc": "Jugador 17 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 18", "desc": "Jugador 18 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 19", "desc": "Jugador 19 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP 20", "desc": "Jugador 20 - España", "tipo": "Regular", "grupo": "ESP"}, {"id": "ESP-00", "desc": "Especial Inicial - Nro 0", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-01", "desc": "Especial Inicial - Nro 1", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-02", "desc": "Especial Inicial - Nro 2", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-03", "desc": "Especial Inicial - Nro 3", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-04", "desc": "Especial Inicial - Nro 4", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-05", "desc": "Especial Inicial - Nro 5", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-06", "desc": "Especial Inicial - Nro 6", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-07", "desc": "Especial Inicial - Nro 7", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-08", "desc": "Especial Inicial - Nro 8", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-09", "desc": "Especial Inicial - Nro 9", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-10", "desc": "Especial Inicial - Nro 10", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-11", "desc": "Especial Inicial - Nro 11", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-12", "desc": "Especial Inicial - Nro 12", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-13", "desc": "Especial Inicial - Nro 13", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "ESP-14", "desc": "Especial Inicial - Nro 14", "tipo": "Holograma / Especial", "grupo": "ESP"}, {"id": "FRA 1", "desc": "Escudo Oficial de Francia", "tipo": "Escudo Holográfico", "grupo": "FRA"}, {"id": "FRA 2", "desc": "Jugador 2 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 3", "desc": "Jugador 3 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 4", "desc": "Jugador 4 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 5", "desc": "Jugador 5 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 6", "desc": "Jugador 6 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 7", "desc": "Jugador 7 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 8", "desc": "Jugador 8 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 9", "desc": "Jugador 9 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 10", "desc": "Jugador 10 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 11", "desc": "Jugador 11 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 12", "desc": "Jugador 12 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 13", "desc": "Foto de Equipo (Squad) - Francia", "tipo": "Equipo Completo", "grupo": "FRA"}, {"id": "FRA 14", "desc": "Jugador 14 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 15", "desc": "Jugador 15 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 16", "desc": "Jugador 16 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 17", "desc": "Jugador 17 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 18", "desc": "Jugador 18 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 19", "desc": "Jugador 19 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "FRA 20", "desc": "Jugador 20 - Francia", "tipo": "Regular", "grupo": "FRA"}, {"id": "GER 1", "desc": "Escudo Oficial de Alemania", "tipo": "Escudo Holográfico", "grupo": "GER"}, {"id": "GER 2", "desc": "Jugador 2 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 3", "desc": "Jugador 3 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 4", "desc": "Jugador 4 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 5", "desc": "Jugador 5 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 6", "desc": "Jugador 6 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 7", "desc": "Jugador 7 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 8", "desc": "Jugador 8 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 9", "desc": "Jugador 9 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 10", "desc": "Jugador 10 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 11", "desc": "Jugador 11 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 12", "desc": "Jugador 12 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 13", "desc": "Foto de Equipo (Squad) - Alemania", "tipo": "Equipo Completo", "grupo": "GER"}, {"id": "GER 14", "desc": "Jugador 14 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 15", "desc": "Jugador 15 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 16", "desc": "Jugador 16 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 17", "desc": "Jugador 17 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 18", "desc": "Jugador 18 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 19", "desc": "Jugador 19 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GER 20", "desc": "Jugador 20 - Alemania", "tipo": "Regular", "grupo": "GER"}, {"id": "GHA 1", "desc": "Escudo Oficial de Ghana", "tipo": "Escudo Holográfico", "grupo": "GHA"}, {"id": "GHA 2", "desc": "Jugador 2 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 3", "desc": "Jugador 3 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 4", "desc": "Jugador 4 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 5", "desc": "Jugador 5 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 6", "desc": "Jugador 6 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 7", "desc": "Jugador 7 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 8", "desc": "Jugador 8 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 9", "desc": "Jugador 9 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 10", "desc": "Jugador 10 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 11", "desc": "Jugador 11 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 12", "desc": "Jugador 12 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 13", "desc": "Foto de Equipo (Squad) - Ghana", "tipo": "Equipo Completo", "grupo": "GHA"}, {"id": "GHA 14", "desc": "Jugador 14 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 15", "desc": "Jugador 15 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 16", "desc": "Jugador 16 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 17", "desc": "Jugador 17 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 18", "desc": "Jugador 18 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 19", "desc": "Jugador 19 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "GHA 20", "desc": "Jugador 20 - Ghana", "tipo": "Regular", "grupo": "GHA"}, {"id": "IRN 1", "desc": "Escudo Oficial de Irán", "tipo": "Escudo Holográfico", "grupo": "IRN"}, {"id": "IRN 2", "desc": "Jugador 2 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 3", "desc": "Jugador 3 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 4", "desc": "Jugador 4 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 5", "desc": "Jugador 5 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 6", "desc": "Jugador 6 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 7", "desc": "Jugador 7 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 8", "desc": "Jugador 8 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 9", "desc": "Jugador 9 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 10", "desc": "Jugador 10 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 11", "desc": "Jugador 11 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 12", "desc": "Jugador 12 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 13", "desc": "Foto de Equipo (Squad) - Irán", "tipo": "Equipo Completo", "grupo": "IRN"}, {"id": "IRN 14", "desc": "Jugador 14 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 15", "desc": "Jugador 15 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 16", "desc": "Jugador 16 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 17", "desc": "Jugador 17 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 18", "desc": "Jugador 18 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 19", "desc": "Jugador 19 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "IRN 20", "desc": "Jugador 20 - Irán", "tipo": "Regular", "grupo": "IRN"}, {"id": "ITA 1", "desc": "Escudo Oficial de Italia", "tipo": "Escudo Holográfico", "grupo": "ITA"}, {"id": "ITA 2", "desc": "Jugador 2 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 3", "desc": "Jugador 3 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 4", "desc": "Jugador 4 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 5", "desc": "Jugador 5 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 6", "desc": "Jugador 6 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 7", "desc": "Jugador 7 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 8", "desc": "Jugador 8 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 9", "desc": "Jugador 9 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 10", "desc": "Jugador 10 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 11", "desc": "Jugador 11 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 12", "desc": "Jugador 12 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 13", "desc": "Foto de Equipo (Squad) - Italia", "tipo": "Equipo Completo", "grupo": "ITA"}, {"id": "ITA 14", "desc": "Jugador 14 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 15", "desc": "Jugador 15 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 16", "desc": "Jugador 16 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 17", "desc": "Jugador 17 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 18", "desc": "Jugador 18 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 19", "desc": "Jugador 19 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "ITA 20", "desc": "Jugador 20 - Italia", "tipo": "Regular", "grupo": "ITA"}, {"id": "JAM 1", "desc": "Escudo Oficial de Jamaica", "tipo": "Escudo Holográfico", "grupo": "JAM"}, {"id": "JAM 2", "desc": "Jugador 2 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 3", "desc": "Jugador 3 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 4", "desc": "Jugador 4 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 5", "desc": "Jugador 5 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 6", "desc": "Jugador 6 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 7", "desc": "Jugador 7 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 8", "desc": "Jugador 8 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 9", "desc": "Jugador 9 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 10", "desc": "Jugador 10 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 11", "desc": "Jugador 11 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 12", "desc": "Jugador 12 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 13", "desc": "Foto de Equipo (Squad) - Jamaica", "tipo": "Equipo Completo", "grupo": "JAM"}, {"id": "JAM 14", "desc": "Jugador 14 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 15", "desc": "Jugador 15 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 16", "desc": "Jugador 16 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 17", "desc": "Jugador 17 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 18", "desc": "Jugador 18 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 19", "desc": "Jugador 19 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JAM 20", "desc": "Jugador 20 - Jamaica", "tipo": "Regular", "grupo": "JAM"}, {"id": "JPN 1", "desc": "Escudo Oficial de Japón", "tipo": "Escudo Holográfico", "grupo": "JPN"}, {"id": "JPN 2", "desc": "Jugador 2 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 3", "desc": "Jugador 3 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 4", "desc": "Jugador 4 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 5", "desc": "Jugador 5 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 6", "desc": "Jugador 6 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 7", "desc": "Jugador 7 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 8", "desc": "Jugador 8 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 9", "desc": "Jugador 9 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 10", "desc": "Jugador 10 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 11", "desc": "Jugador 11 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 12", "desc": "Jugador 12 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 13", "desc": "Foto de Equipo (Squad) - Japón", "tipo": "Equipo Completo", "grupo": "JPN"}, {"id": "JPN 14", "desc": "Jugador 14 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 15", "desc": "Jugador 15 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 16", "desc": "Jugador 16 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 17", "desc": "Jugador 17 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 18", "desc": "Jugador 18 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 19", "desc": "Jugador 19 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "JPN 20", "desc": "Jugador 20 - Japón", "tipo": "Regular", "grupo": "JPN"}, {"id": "KOR 1", "desc": "Escudo Oficial de Corea del Sur", "tipo": "Escudo Holográfico", "grupo": "KOR"}, {"id": "KOR 2", "desc": "Jugador 2 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 3", "desc": "Jugador 3 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 4", "desc": "Jugador 4 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 5", "desc": "Jugador 5 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 6", "desc": "Jugador 6 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 7", "desc": "Jugador 7 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 8", "desc": "Jugador 8 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 9", "desc": "Jugador 9 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 10", "desc": "Jugador 10 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 11", "desc": "Jugador 11 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 12", "desc": "Jugador 12 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 13", "desc": "Foto de Equipo (Squad) - Corea del Sur", "tipo": "Equipo Completo", "grupo": "KOR"}, {"id": "KOR 14", "desc": "Jugador 14 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 15", "desc": "Jugador 15 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 16", "desc": "Jugador 16 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 17", "desc": "Jugador 17 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 18", "desc": "Jugador 18 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 19", "desc": "Jugador 19 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KOR 20", "desc": "Jugador 20 - Corea del Sur", "tipo": "Regular", "grupo": "KOR"}, {"id": "KSA 1", "desc": "Escudo Oficial de Arabia Saudita", "tipo": "Escudo Holográfico", "grupo": "KSA"}, {"id": "KSA 2", "desc": "Jugador 2 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 3", "desc": "Jugador 3 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 4", "desc": "Jugador 4 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 5", "desc": "Jugador 5 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 6", "desc": "Jugador 6 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 7", "desc": "Jugador 7 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 8", "desc": "Jugador 8 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 9", "desc": "Jugador 9 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 10", "desc": "Jugador 10 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 11", "desc": "Jugador 11 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 12", "desc": "Jugador 12 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 13", "desc": "Foto de Equipo (Squad) - Arabia Saudita", "tipo": "Equipo Completo", "grupo": "KSA"}, {"id": "KSA 14", "desc": "Jugador 14 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 15", "desc": "Jugador 15 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 16", "desc": "Jugador 16 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 17", "desc": "Jugador 17 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 18", "desc": "Jugador 18 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 19", "desc": "Jugador 19 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "KSA 20", "desc": "Jugador 20 - Arabia Saudita", "tipo": "Regular", "grupo": "KSA"}, {"id": "MAR 1", "desc": "Escudo Oficial de Marruecos", "tipo": "Escudo Holográfico", "grupo": "MAR"}, {"id": "MAR 2", "desc": "Jugador 2 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 3", "desc": "Jugador 3 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 4", "desc": "Jugador 4 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 5", "desc": "Jugador 5 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 6", "desc": "Jugador 6 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 7", "desc": "Jugador 7 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 8", "desc": "Jugador 8 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 9", "desc": "Jugador 9 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 10", "desc": "Jugador 10 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 11", "desc": "Jugador 11 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 12", "desc": "Jugador 12 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 13", "desc": "Foto de Equipo (Squad) - Marruecos", "tipo": "Equipo Completo", "grupo": "MAR"}, {"id": "MAR 14", "desc": "Jugador 14 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 15", "desc": "Jugador 15 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 16", "desc": "Jugador 16 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 17", "desc": "Jugador 17 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 18", "desc": "Jugador 18 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 19", "desc": "Jugador 19 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MAR 20", "desc": "Jugador 20 - Marruecos", "tipo": "Regular", "grupo": "MAR"}, {"id": "MEX 1", "desc": "Escudo Oficial de México", "tipo": "Escudo Holográfico", "grupo": "MEX"}, {"id": "MEX 2", "desc": "Jugador 2 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 3", "desc": "Jugador 3 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 4", "desc": "Jugador 4 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 5", "desc": "Jugador 5 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 6", "desc": "Jugador 6 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 7", "desc": "Jugador 7 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 8", "desc": "Jugador 8 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 9", "desc": "Jugador 9 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 10", "desc": "Jugador 10 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 11", "desc": "Jugador 11 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 12", "desc": "Jugador 12 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 13", "desc": "Foto de Equipo (Squad) - México", "tipo": "Equipo Completo", "grupo": "MEX"}, {"id": "MEX 14", "desc": "Jugador 14 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 15", "desc": "Jugador 15 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 16", "desc": "Jugador 16 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 17", "desc": "Jugador 17 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 18", "desc": "Jugador 18 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 19", "desc": "Jugador 19 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "MEX 20", "desc": "Jugador 20 - México", "tipo": "Regular", "grupo": "MEX"}, {"id": "NED 1", "desc": "Escudo Oficial de Países Bajos", "tipo": "Escudo Holográfico", "grupo": "NED"}, {"id": "NED 2", "desc": "Jugador 2 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 3", "desc": "Jugador 3 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 4", "desc": "Jugador 4 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 5", "desc": "Jugador 5 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 6", "desc": "Jugador 6 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 7", "desc": "Jugador 7 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 8", "desc": "Jugador 8 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 9", "desc": "Jugador 9 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 10", "desc": "Jugador 10 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 11", "desc": "Jugador 11 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 12", "desc": "Jugador 12 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 13", "desc": "Foto de Equipo (Squad) - Países Bajos", "tipo": "Equipo Completo", "grupo": "NED"}, {"id": "NED 14", "desc": "Jugador 14 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 15", "desc": "Jugador 15 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 16", "desc": "Jugador 16 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 17", "desc": "Jugador 17 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 18", "desc": "Jugador 18 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 19", "desc": "Jugador 19 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NED 20", "desc": "Jugador 20 - Países Bajos", "tipo": "Regular", "grupo": "NED"}, {"id": "NGA 1", "desc": "Escudo Oficial de Nigeria", "tipo": "Escudo Holográfico", "grupo": "NGA"}, {"id": "NGA 2", "desc": "Jugador 2 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 3", "desc": "Jugador 3 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 4", "desc": "Jugador 4 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 5", "desc": "Jugador 5 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 6", "desc": "Jugador 6 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 7", "desc": "Jugador 7 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 8", "desc": "Jugador 8 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 9", "desc": "Jugador 9 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 10", "desc": "Jugador 10 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 11", "desc": "Jugador 11 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 12", "desc": "Jugador 12 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 13", "desc": "Foto de Equipo (Squad) - Nigeria", "tipo": "Equipo Completo", "grupo": "NGA"}, {"id": "NGA 14", "desc": "Jugador 14 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 15", "desc": "Jugador 15 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 16", "desc": "Jugador 16 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 17", "desc": "Jugador 17 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 18", "desc": "Jugador 18 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 19", "desc": "Jugador 19 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "NGA 20", "desc": "Jugador 20 - Nigeria", "tipo": "Regular", "grupo": "NGA"}, {"id": "PAN 1", "desc": "Escudo Oficial de Panamá", "tipo": "Escudo Holográfico", "grupo": "PAN"}, {"id": "PAN 2", "desc": "Jugador 2 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 3", "desc": "Jugador 3 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 4", "desc": "Jugador 4 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 5", "desc": "Jugador 5 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 6", "desc": "Jugador 6 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 7", "desc": "Jugador 7 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 8", "desc": "Jugador 8 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 9", "desc": "Jugador 9 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 10", "desc": "Jugador 10 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 11", "desc": "Jugador 11 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 12", "desc": "Jugador 12 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 13", "desc": "Foto de Equipo (Squad) - Panamá", "tipo": "Equipo Completo", "grupo": "PAN"}, {"id": "PAN 14", "desc": "Jugador 14 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 15", "desc": "Jugador 15 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 16", "desc": "Jugador 16 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 17", "desc": "Jugador 17 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 18", "desc": "Jugador 18 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 19", "desc": "Jugador 19 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAN 20", "desc": "Jugador 20 - Panamá", "tipo": "Regular", "grupo": "PAN"}, {"id": "PAR 1", "desc": "Escudo Oficial de Paraguay", "tipo": "Escudo Holográfico", "grupo": "PAR"}, {"id": "PAR 2", "desc": "Jugador 2 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 3", "desc": "Jugador 3 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 4", "desc": "Jugador 4 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 5", "desc": "Jugador 5 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 6", "desc": "Jugador 6 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 7", "desc": "Jugador 7 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 8", "desc": "Jugador 8 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 9", "desc": "Jugador 9 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 10", "desc": "Jugador 10 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 11", "desc": "Jugador 11 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 12", "desc": "Jugador 12 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 13", "desc": "Foto de Equipo (Squad) - Paraguay", "tipo": "Equipo Completo", "grupo": "PAR"}, {"id": "PAR 14", "desc": "Jugador 14 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 15", "desc": "Jugador 15 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 16", "desc": "Jugador 16 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 17", "desc": "Jugador 17 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 18", "desc": "Jugador 18 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 19", "desc": "Jugador 19 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PAR 20", "desc": "Jugador 20 - Paraguay", "tipo": "Regular", "grupo": "PAR"}, {"id": "PER 1", "desc": "Escudo Oficial de Perú", "tipo": "Escudo Holográfico", "grupo": "PER"}, {"id": "PER 2", "desc": "Jugador 2 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 3", "desc": "Jugador 3 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 4", "desc": "Jugador 4 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 5", "desc": "Jugador 5 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 6", "desc": "Jugador 6 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 7", "desc": "Jugador 7 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 8", "desc": "Jugador 8 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 9", "desc": "Jugador 9 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 10", "desc": "Jugador 10 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 11", "desc": "Jugador 11 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 12", "desc": "Jugador 12 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 13", "desc": "Foto de Equipo (Squad) - Perú", "tipo": "Equipo Completo", "grupo": "PER"}, {"id": "PER 14", "desc": "Jugador 14 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 15", "desc": "Jugador 15 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 16", "desc": "Jugador 16 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 17", "desc": "Jugador 17 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 18", "desc": "Jugador 18 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 19", "desc": "Jugador 19 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "PER 20", "desc": "Jugador 20 - Perú", "tipo": "Regular", "grupo": "PER"}, {"id": "POR 1", "desc": "Escudo Oficial de Portugal", "tipo": "Escudo Holográfico", "grupo": "POR"}, {"id": "POR 2", "desc": "Jugador 2 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 3", "desc": "Jugador 3 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 4", "desc": "Jugador 4 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 5", "desc": "Jugador 5 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 6", "desc": "Jugador 6 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 7", "desc": "Jugador 7 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 8", "desc": "Jugador 8 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 9", "desc": "Jugador 9 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 10", "desc": "Jugador 10 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 11", "desc": "Jugador 11 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 12", "desc": "Jugador 12 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 13", "desc": "Foto de Equipo (Squad) - Portugal", "tipo": "Equipo Completo", "grupo": "POR"}, {"id": "POR 14", "desc": "Jugador 14 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 15", "desc": "Jugador 15 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 16", "desc": "Jugador 16 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 17", "desc": "Jugador 17 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 18", "desc": "Jugador 18 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 19", "desc": "Jugador 19 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "POR 20", "desc": "Jugador 20 - Portugal", "tipo": "Regular", "grupo": "POR"}, {"id": "QAT 1", "desc": "Escudo Oficial de Catar", "tipo": "Escudo Holográfico", "grupo": "QAT"}, {"id": "QAT 2", "desc": "Jugador 2 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 3", "desc": "Jugador 3 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 4", "desc": "Jugador 4 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 5", "desc": "Jugador 5 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 6", "desc": "Jugador 6 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 7", "desc": "Jugador 7 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 8", "desc": "Jugador 8 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 9", "desc": "Jugador 9 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 10", "desc": "Jugador 10 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 11", "desc": "Jugador 11 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 12", "desc": "Jugador 12 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 13", "desc": "Foto de Equipo (Squad) - Catar", "tipo": "Equipo Completo", "grupo": "QAT"}, {"id": "QAT 14", "desc": "Jugador 14 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 15", "desc": "Jugador 15 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 16", "desc": "Jugador 16 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 17", "desc": "Jugador 17 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 18", "desc": "Jugador 18 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 19", "desc": "Jugador 19 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "QAT 20", "desc": "Jugador 20 - Catar", "tipo": "Regular", "grupo": "QAT"}, {"id": "RSA 1", "desc": "Escudo Oficial de Sudáfrica", "tipo": "Escudo Holográfico", "grupo": "RSA"}, {"id": "RSA 2", "desc": "Jugador 2 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 3", "desc": "Jugador 3 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 4", "desc": "Jugador 4 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 5", "desc": "Jugador 5 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 6", "desc": "Jugador 6 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 7", "desc": "Jugador 7 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 8", "desc": "Jugador 8 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 9", "desc": "Jugador 9 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 10", "desc": "Jugador 10 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 11", "desc": "Jugador 11 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 12", "desc": "Jugador 12 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 13", "desc": "Foto de Equipo (Squad) - Sudáfrica", "tipo": "Equipo Completo", "grupo": "RSA"}, {"id": "RSA 14", "desc": "Jugador 14 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 15", "desc": "Jugador 15 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 16", "desc": "Jugador 16 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 17", "desc": "Jugador 17 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 18", "desc": "Jugador 18 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 19", "desc": "Jugador 19 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "RSA 20", "desc": "Jugador 20 - Sudáfrica", "tipo": "Regular", "grupo": "RSA"}, {"id": "SCO 1", "desc": "Escudo Oficial de Escocia", "tipo": "Escudo Holográfico", "grupo": "SCO"}, {"id": "SCO 2", "desc": "Jugador 2 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 3", "desc": "Jugador 3 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 4", "desc": "Jugador 4 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 5", "desc": "Jugador 5 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 6", "desc": "Jugador 6 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 7", "desc": "Jugador 7 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 8", "desc": "Jugador 8 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 9", "desc": "Jugador 9 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 10", "desc": "Jugador 10 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 11", "desc": "Jugador 11 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 12", "desc": "Jugador 12 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 13", "desc": "Foto de Equipo (Squad) - Escocia", "tipo": "Equipo Completo", "grupo": "SCO"}, {"id": "SCO 14", "desc": "Jugador 14 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 15", "desc": "Jugador 15 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 16", "desc": "Jugador 16 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 17", "desc": "Jugador 17 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 18", "desc": "Jugador 18 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 19", "desc": "Jugador 19 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SCO 20", "desc": "Jugador 20 - Escocia", "tipo": "Regular", "grupo": "SCO"}, {"id": "SEN 1", "desc": "Escudo Oficial de Senegal", "tipo": "Escudo Holográfico", "grupo": "SEN"}, {"id": "SEN 2", "desc": "Jugador 2 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 3", "desc": "Jugador 3 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 4", "desc": "Jugador 4 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 5", "desc": "Jugador 5 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 6", "desc": "Jugador 6 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 7", "desc": "Jugador 7 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 8", "desc": "Jugador 8 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 9", "desc": "Jugador 9 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 10", "desc": "Jugador 10 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 11", "desc": "Jugador 11 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 12", "desc": "Jugador 12 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 13", "desc": "Foto de Equipo (Squad) - Senegal", "tipo": "Equipo Completo", "grupo": "SEN"}, {"id": "SEN 14", "desc": "Jugador 14 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 15", "desc": "Jugador 15 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 16", "desc": "Jugador 16 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 17", "desc": "Jugador 17 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 18", "desc": "Jugador 18 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 19", "desc": "Jugador 19 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SEN 20", "desc": "Jugador 20 - Senegal", "tipo": "Regular", "grupo": "SEN"}, {"id": "SUI 1", "desc": "Escudo Oficial de Suiza", "tipo": "Escudo Holográfico", "grupo": "SUI"}, {"id": "SUI 2", "desc": "Jugador 2 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 3", "desc": "Jugador 3 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 4", "desc": "Jugador 4 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 5", "desc": "Jugador 5 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 6", "desc": "Jugador 6 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 7", "desc": "Jugador 7 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 8", "desc": "Jugador 8 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 9", "desc": "Jugador 9 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 10", "desc": "Jugador 10 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 11", "desc": "Jugador 11 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 12", "desc": "Jugador 12 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 13", "desc": "Foto de Equipo (Squad) - Suiza", "tipo": "Equipo Completo", "grupo": "SUI"}, {"id": "SUI 14", "desc": "Jugador 14 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 15", "desc": "Jugador 15 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 16", "desc": "Jugador 16 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 17", "desc": "Jugador 17 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 18", "desc": "Jugador 18 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 19", "desc": "Jugador 19 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SUI 20", "desc": "Jugador 20 - Suiza", "tipo": "Regular", "grupo": "SUI"}, {"id": "SWE 1", "desc": "Escudo Oficial de Suecia", "tipo": "Escudo Holográfico", "grupo": "SWE"}, {"id": "SWE 2", "desc": "Jugador 2 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 3", "desc": "Jugador 3 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 4", "desc": "Jugador 4 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 5", "desc": "Jugador 5 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 6", "desc": "Jugador 6 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 7", "desc": "Jugador 7 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 8", "desc": "Jugador 8 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 9", "desc": "Jugador 9 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 10", "desc": "Jugador 10 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 11", "desc": "Jugador 11 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 12", "desc": "Jugador 12 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 13", "desc": "Foto de Equipo (Squad) - Suecia", "tipo": "Equipo Completo", "grupo": "SWE"}, {"id": "SWE 14", "desc": "Jugador 14 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 15", "desc": "Jugador 15 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 16", "desc": "Jugador 16 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 17", "desc": "Jugador 17 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 18", "desc": "Jugador 18 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 19", "desc": "Jugador 19 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "SWE 20", "desc": "Jugador 20 - Suecia", "tipo": "Regular", "grupo": "SWE"}, {"id": "TUN 1", "desc": "Escudo Oficial de Túnez", "tipo": "Escudo Holográfico", "grupo": "TUN"}, {"id": "TUN 2", "desc": "Jugador 2 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 3", "desc": "Jugador 3 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 4", "desc": "Jugador 4 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 5", "desc": "Jugador 5 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 6", "desc": "Jugador 6 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 7", "desc": "Jugador 7 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 8", "desc": "Jugador 8 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 9", "desc": "Jugador 9 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 10", "desc": "Jugador 10 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 11", "desc": "Jugador 11 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 12", "desc": "Jugador 12 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 13", "desc": "Foto de Equipo (Squad) - Túnez", "tipo": "Equipo Completo", "grupo": "TUN"}, {"id": "TUN 14", "desc": "Jugador 14 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 15", "desc": "Jugador 15 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 16", "desc": "Jugador 16 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 17", "desc": "Jugador 17 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 18", "desc": "Jugador 18 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 19", "desc": "Jugador 19 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUN 20", "desc": "Jugador 20 - Túnez", "tipo": "Regular", "grupo": "TUN"}, {"id": "TUR 1", "desc": "Escudo Oficial de Turquía", "tipo": "Escudo Holográfico", "grupo": "TUR"}, {"id": "TUR 2", "desc": "Jugador 2 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 3", "desc": "Jugador 3 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 4", "desc": "Jugador 4 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 5", "desc": "Jugador 5 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 6", "desc": "Jugador 6 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 7", "desc": "Jugador 7 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 8", "desc": "Jugador 8 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 9", "desc": "Jugador 9 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 10", "desc": "Jugador 10 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 11", "desc": "Jugador 11 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 12", "desc": "Jugador 12 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 13", "desc": "Foto de Equipo (Squad) - Turquía", "tipo": "Equipo Completo", "grupo": "TUR"}, {"id": "TUR 14", "desc": "Jugador 14 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 15", "desc": "Jugador 15 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 16", "desc": "Jugador 16 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 17", "desc": "Jugador 17 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 18", "desc": "Jugador 18 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 19", "desc": "Jugador 19 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "TUR 20", "desc": "Jugador 20 - Turquía", "tipo": "Regular", "grupo": "TUR"}, {"id": "UAE 1", "desc": "Escudo Oficial de Emiratos Árabes", "tipo": "Escudo Holográfico", "grupo": "UAE"}, {"id": "UAE 2", "desc": "Jugador 2 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 3", "desc": "Jugador 3 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 4", "desc": "Jugador 4 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 5", "desc": "Jugador 5 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 6", "desc": "Jugador 6 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 7", "desc": "Jugador 7 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 8", "desc": "Jugador 8 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 9", "desc": "Jugador 9 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 10", "desc": "Jugador 10 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 11", "desc": "Jugador 11 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 12", "desc": "Jugador 12 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 13", "desc": "Foto de Equipo (Squad) - Emiratos Árabes", "tipo": "Equipo Completo", "grupo": "UAE"}, {"id": "UAE 14", "desc": "Jugador 14 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 15", "desc": "Jugador 15 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 16", "desc": "Jugador 16 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 17", "desc": "Jugador 17 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 18", "desc": "Jugador 18 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 19", "desc": "Jugador 19 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UAE 20", "desc": "Jugador 20 - Emiratos Árabes", "tipo": "Regular", "grupo": "UAE"}, {"id": "UKR 1", "desc": "Escudo Oficial de Ucrania", "tipo": "Escudo Holográfico", "grupo": "UKR"}, {"id": "UKR 2", "desc": "Jugador 2 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 3", "desc": "Jugador 3 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 4", "desc": "Jugador 4 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 5", "desc": "Jugador 5 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 6", "desc": "Jugador 6 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 7", "desc": "Jugador 7 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 8", "desc": "Jugador 8 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 9", "desc": "Jugador 9 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 10", "desc": "Jugador 10 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 11", "desc": "Jugador 11 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 12", "desc": "Jugador 12 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 13", "desc": "Foto de Equipo (Squad) - Ucrania", "tipo": "Equipo Completo", "grupo": "UKR"}, {"id": "UKR 14", "desc": "Jugador 14 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 15", "desc": "Jugador 15 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 16", "desc": "Jugador 16 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 17", "desc": "Jugador 17 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 18", "desc": "Jugador 18 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 19", "desc": "Jugador 19 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "UKR 20", "desc": "Jugador 20 - Ucrania", "tipo": "Regular", "grupo": "UKR"}, {"id": "URU 1", "desc": "Escudo Oficial de Uruguay", "tipo": "Escudo Holográfico", "grupo": "URU"}, {"id": "URU 2", "desc": "Jugador 2 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 3", "desc": "Jugador 3 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 4", "desc": "Jugador 4 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 5", "desc": "Jugador 5 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 6", "desc": "Jugador 6 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 7", "desc": "Jugador 7 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 8", "desc": "Jugador 8 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 9", "desc": "Jugador 9 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 10", "desc": "Jugador 10 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 11", "desc": "Jugador 11 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 12", "desc": "Jugador 12 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 13", "desc": "Foto de Equipo (Squad) - Uruguay", "tipo": "Equipo Completo", "grupo": "URU"}, {"id": "URU 14", "desc": "Jugador 14 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 15", "desc": "Jugador 15 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 16", "desc": "Jugador 16 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 17", "desc": "Jugador 17 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 18", "desc": "Jugador 18 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 19", "desc": "Jugador 19 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "URU 20", "desc": "Jugador 20 - Uruguay", "tipo": "Regular", "grupo": "URU"}, {"id": "USA 1", "desc": "Escudo Oficial de Estados Unidos", "tipo": "Escudo Holográfico", "grupo": "USA"}, {"id": "USA 2", "desc": "Jugador 2 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 3", "desc": "Jugador 3 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 4", "desc": "Jugador 4 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 5", "desc": "Jugador 5 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 6", "desc": "Jugador 6 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 7", "desc": "Jugador 7 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 8", "desc": "Jugador 8 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 9", "desc": "Jugador 9 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 10", "desc": "Jugador 10 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 11", "desc": "Jugador 11 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 12", "desc": "Jugador 12 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 13", "desc": "Foto de Equipo (Squad) - Estados Unidos", "tipo": "Equipo Completo", "grupo": "USA"}, {"id": "USA 14", "desc": "Jugador 14 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 15", "desc": "Jugador 15 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 16", "desc": "Jugador 16 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 17", "desc": "Jugador 17 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 18", "desc": "Jugador 18 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 19", "desc": "Jugador 19 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "USA 20", "desc": "Jugador 20 - Estados Unidos", "tipo": "Regular", "grupo": "USA"}, {"id": "VEN 1", "desc": "Escudo Oficial de Venezuela", "tipo": "Escudo Holográfico", "grupo": "VEN"}, {"id": "VEN 2", "desc": "Jugador 2 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 3", "desc": "Jugador 3 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 4", "desc": "Jugador 4 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 5", "desc": "Jugador 5 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 6", "desc": "Jugador 6 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 7", "desc": "Jugador 7 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 8", "desc": "Jugador 8 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 9", "desc": "Jugador 9 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 10", "desc": "Jugador 10 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 11", "desc": "Jugador 11 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 12", "desc": "Jugador 12 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 13", "desc": "Foto de Equipo (Squad) - Venezuela", "tipo": "Equipo Completo", "grupo": "VEN"}, {"id": "VEN 14", "desc": "Jugador 14 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 15", "desc": "Jugador 15 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 16", "desc": "Jugador 16 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 17", "desc": "Jugador 17 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 18", "desc": "Jugador 18 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 19", "desc": "Jugador 19 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "VEN 20", "desc": "Jugador 20 - Venezuela", "tipo": "Regular", "grupo": "VEN"}, {"id": "WAL 1", "desc": "Escudo Oficial de Gales", "tipo": "Escudo Holográfico", "grupo": "WAL"}, {"id": "WAL 2", "desc": "Jugador 2 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 3", "desc": "Jugador 3 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 4", "desc": "Jugador 4 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 5", "desc": "Jugador 5 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 6", "desc": "Jugador 6 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 7", "desc": "Jugador 7 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 8", "desc": "Jugador 8 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 9", "desc": "Jugador 9 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 10", "desc": "Jugador 10 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 11", "desc": "Jugador 11 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 12", "desc": "Jugador 12 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 13", "desc": "Foto de Equipo (Squad) - Gales", "tipo": "Equipo Completo", "grupo": "WAL"}, {"id": "WAL 14", "desc": "Jugador 14 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 15", "desc": "Jugador 15 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 16", "desc": "Jugador 16 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 17", "desc": "Jugador 17 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 18", "desc": "Jugador 18 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 19", "desc": "Jugador 19 - Gales", "tipo": "Regular", "grupo": "WAL"}, {"id": "WAL 20", "desc": "Jugador 20 - Gales", "tipo": "Regular", "grupo": "WAL"}];
+
         ];
 
         let userProgress = {};
-        let userPasswords = {}; // Guarda claves de forma limpia
-        let currentUser = "Invitado";
-
-        // Variables de control de modal dinámico
-        let modalActionType = ""; 
-        let modalTargetUser = "";
+        let userPasswords = {}; 
+        let currentUser = null;
 
         window.onload = function() {
             loadStorage();
             buildGroupFilter();
-            updateProfileSelect();
-            selectInitialUser();
-            renderGrid();
-            calculateMetrics();
-            updateAdminPanel();
+            
+            // Forzar enfoque inicial en campo de usuario
+            document.getElementById("usernameField").focus();
         };
 
         function loadStorage() {
@@ -475,12 +337,11 @@
         function saveStorage() {
             localStorage.setItem("gmt_panini_progress", JSON.stringify(userProgress));
             localStorage.setItem("gmt_panini_passwords", JSON.stringify(userPasswords));
-            updateAdminPanel();
         }
 
         function buildGroupFilter() {
             const filter = document.getElementById("groupFilter");
-            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.grupo))];
+            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.grupo))].sort();
             
             distinctGroups.forEach(g => {
                 const opt = document.createElement("option");
@@ -490,140 +351,60 @@
             });
         }
 
-        function updateProfileSelect() {
-            const select = document.getElementById("profileSelect");
-            select.innerHTML = "";
-            
-            const users = Object.keys(userProgress);
-            if(users.length === 0) {
-                const opt = document.createElement("option");
-                opt.textContent = "Sin perfiles";
-                select.appendChild(opt);
+        function handleAuth() {
+            const userInp = document.getElementById("usernameField").value.trim();
+            const passInp = document.getElementById("passwordField").value.trim();
+
+            if (!userInp || !passInp) {
+                alert("❌ Por favor completa ambos campos para acceder.");
                 return;
             }
 
-            users.forEach(u => {
-                const opt = document.createElement("option");
-                opt.value = u;
-                opt.textContent = u;
-                if(u === currentUser) opt.selected = true;
-                select.appendChild(opt);
-            });
-        }
-
-        function selectInitialUser() {
-            const users = Object.keys(userProgress);
-            if(users.length > 0) {
-                currentUser = users[0];
-            } else {
-                currentUser = "Invitado";
-                userProgress[currentUser] = {};
-                userPasswords[currentUser] = "1234"; // Contraseña por defecto inicial
-                saveStorage();
-            }
-            document.getElementById("activeUserLabel").textContent = `Perfil: ${currentUser}`;
-            updateProfileSelect();
-        }
-
-        function openSecurityModal(title, desc, type, targetUser) {
-            document.getElementById("modalTitle").textContent = title;
-            document.getElementById("modalDescription").textContent = desc;
-            document.getElementById("modalPasswordInput").value = "";
-            modalActionType = type;
-            modalTargetUser = targetUser;
-            document.getElementById("securityModal").classList.add("active");
-            document.getElementById("modalPasswordInput").focus();
-        }
-
-        function closeSecurityModal() {
-            document.getElementById("securityModal").classList.remove("active");
-            updateProfileSelect(); // Revierte el select visual si canceló
-        }
-
-        function submitSecurityModal() {
-            const typedPassword = document.getElementById("modalPasswordInput").value.trim();
-
-            if(!typedPassword) {
-                alert("La contraseña no puede estar vacía.");
-                return;
-            }
-
-            if(modalActionType === "CREATE") {
-                // Registro de nuevo usuario con contraseña
-                userProgress[modalTargetUser] = {};
-                userPasswords[modalTargetUser] = typedPassword;
-                currentUser = modalTargetUser;
-                
-                saveStorage();
-                updateProfileSelect();
-                
-                document.getElementById("activeUserLabel").textContent = `Perfil: ${currentUser}`;
-                document.getElementById("usernameInput").value = "";
-                
-                renderGrid();
-                calculateMetrics();
-                document.getElementById("securityModal").classList.remove("active");
-                showToast();
-            } 
-            else if(modalActionType === "SWITCH") {
-                // Validación de contraseña existente para cambio de usuario
-                const correctPassword = userPasswords[modalTargetUser];
-                if(typedPassword === correctPassword) {
-                    currentUser = modalTargetUser;
-                    document.getElementById("activeUserLabel").textContent = `Perfil: ${currentUser}`;
-                    renderGrid();
-                    calculateMetrics();
-                    document.getElementById("securityModal").classList.remove("active");
+            // CASO 1: El usuario ya existe
+            if (userProgress[userInp] !== undefined) {
+                if (userPasswords[userInp] === passInp) {
+                    executeLogin(userInp);
                 } else {
-                    alert("❌ Contraseña incorrecta. Acceso denegado.");
+                    alert("❌ Contraseña incorrecta para este perfil. Intenta de nuevo.");
                 }
+            } 
+            // CASO 2: Es un usuario nuevo, lo registra automáticamente con esa clave
+            else {
+                userProgress[userInp] = {};
+                userPasswords[userInp] = passInp;
+                saveStorage();
+                alert(`✨ ¡Perfil "${userInp}" creado con éxito!`);
+                executeLogin(userInp);
             }
         }
 
-        function loginUser() {
-            const input = document.getElementById("usernameInput");
-            const rawName = input.value.trim();
-
-            if(!rawName) {
-                alert("Por favor introduce un nombre válido.");
-                return;
-            }
-
-            // Si el usuario ya existe, pide contraseña para cambiar
-            if(userProgress[rawName] !== undefined) {
-                openSecurityModal(
-                    "Perfil Existente", 
-                    `El usuario "${rawName}" ya existe. Introduce su contraseña para acceder:`, 
-                    "SWITCH", 
-                    rawName
-                );
-            } else {
-                // Si es un perfil nuevo, solicita crear la contraseña
-                openSecurityModal(
-                    "Crear Contraseña", 
-                    `Registrando a "${rawName}". Asigna una contraseña de seguridad para este perfil:`, 
-                    "CREATE", 
-                    rawName
-                );
-            }
-        }
-
-        function switchProfile(targetUser) {
-            if(targetUser === currentUser || !userProgress[targetUser]) return;
+        function executeLogin(username) {
+            currentUser = username;
             
-            openSecurityModal(
-                "Validación de Seguridad", 
-                `Introduce la clave del perfil "${targetUser}" para poder ver y modificar sus datos:`, 
-                "SWITCH", 
-                targetUser
-            );
+            // Ocultar pantalla de acceso y mostrar la interfaz del álbum
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("appContainer").style.display = "block";
+            
+            document.getElementById("sessionUserLabel").textContent = currentUser;
+            
+            // Limpiar credenciales del formulario por seguridad interna
+            document.getElementById("usernameField").value = "";
+            document.getElementById("passwordField").value = "";
+
+            renderGrid();
+            calculateMetrics();
+            showToast();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById("appContainer").style.display = "none";
+            document.getElementById("loginScreen").style.display = "flex";
+            document.getElementById("usernameField").focus();
         }
 
         function toggleSticker(id, cardElement) {
-            if(!userProgress[currentUser]) {
-                alert("Crea o selecciona un perfil activo primero.");
-                return;
-            }
+            if(!currentUser || !userProgress[currentUser]) return;
 
             const currentStatus = userProgress[currentUser][id] || "NO";
             const newStatus = currentStatus === "SI" ? "NO" : "SI";
@@ -666,11 +447,8 @@
             STICKERS_BASE.forEach(s => {
                 const status = currentMap[s.id] || "NO";
 
-                // Filtro de texto
                 if(query && !s.id.toLowerCase().includes(query) && !s.desc.toLowerCase().includes(query)) return;
-                // Filtro por sección/país
                 if(groupSel !== "ALL" && s.grupo !== groupSel) return;
-                // Filtro de estado obtenido
                 if(statusSel !== "ALL" && status !== statusSel) return;
 
                 const card = document.createElement("div");
@@ -694,34 +472,8 @@
         function showToast() {
             const toast = document.getElementById("toastMessage");
             toast.style.display = "block";
-            setTimeout(() => {
-                toast.style.display = "none";
-            }, 1500);
-        }
-
-        // Función que renderiza la tabla de control del Administrador/Supervisor
-        function updateAdminPanel() {
-            const tbody = document.getElementById("adminTableBody");
-            tbody.innerHTML = "";
-
-            const users = Object.keys(userProgress);
-            if(users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #a0aec0;">Ningún perfil registrado aún</td></tr>`;
-                return;
-            }
-
-            users.forEach(u => {
-                const tr = document.createElement("tr");
-                const pass = userPasswords[u] || "1234"; // Muestra clave original
-                
-                tr.innerHTML = `
-                    <td style="font-weight: bold; color: var(--primary-color);">${u} ${u === currentUser ? '<span style="color:#dd6b20; font-size:0.75rem;">(Activo)</span>' : ''}</td>
-                    <td style="font-family: monospace; font-size: 1.1rem; color: #e53e3e; font-weight: bold;">${pass}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+            setTimeout(() => { toast.style.display = "none"; }, 1500);
         }
     </script>
 </body>
-</html>
 </html>
