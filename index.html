@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Mundial 2026</title>
+    <title>Control Panini Mundial 2026</title>
     <style>
         :root {
             --primary-color: #1a365d;
@@ -33,6 +33,17 @@
             line-height: 1.5;
         }
 
+        /* Diseño responsivo para pantallas pequeñas (Celulares) */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { flex-direction: column; text-align: center; gap: 12px; }
+            header style { text-align: center !important; }
+            .filter-section { flex-direction: column; gap: 10px; }
+            .filter-section input, .filter-section select { width: 100%; }
+            .kpi-card { padding: 12px; }
+            .kpi-card .value { font-size: 1.4rem; }
+        }
+
         .login-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,6 +52,7 @@
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            padding: 15px;
         }
 
         .login-card {
@@ -55,14 +67,15 @@
 
         .login-card h2 { margin-bottom: 20px; color: var(--primary-color); }
         .login-card input {
-            width: 100%; padding: 10px; margin-bottom: 15px;
+            width: 100%; padding: 12px; margin-bottom: 15px;
             border: 1px solid var(--border-color); border-radius: 6px;
+            font-size: 16px; /* Evita zoom automático en móviles */
         }
 
         .login-card button {
             background: var(--secondary-color); color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;
-            font-weight: bold;
+            padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;
+            font-weight: bold; font-size: 16px;
         }
 
         .app-container { display: none; }
@@ -81,8 +94,8 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
             margin-bottom: 25px;
         }
 
@@ -102,7 +115,7 @@
             background: var(--card-bg);
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             border: 1px solid var(--border-color);
             display: flex;
@@ -111,19 +124,40 @@
 
         .filter-section input, .filter-section select {
             padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;
+            font-size: 14px; background-color: #fff;
+        }
+
+        /* Barra informativa por país/sección optimizada */
+        .section-counter-badge {
+            background-color: #edf2f7;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #4a5568;
+            font-weight: 500;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        /* Estilo especial cuando la sección se completa al 100% */
+        .section-counter-badge.completed {
+            background-color: #c6f6d5;
+            border-color: #48bb78;
+            color: #22543d;
         }
 
         .items-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+            gap: 10px;
         }
 
         .sticker-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -131,9 +165,9 @@
         }
 
         .sticker-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .sticker-card .sticker-id { font-weight: bold; font-size: 1.2rem; color: var(--primary-color); }
-        .sticker-card .sticker-desc { font-size: 0.8rem; color: #4a5568; margin: 5px 0; min-height: 36px; }
-        .sticker-card .sticker-type { font-size: 0.7rem; color: #718096; background: #edf2f7; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .sticker-card .sticker-id { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
+        .sticker-card .sticker-desc { font-size: 0.75rem; color: #4a5568; margin: 4px 0; min-height: 32px; display: flex; align-items: center; justify-content: center; }
+        .sticker-card .sticker-type { font-size: 0.65rem; color: #718096; background: #edf2f7; padding: 2px 4px; border-radius: 4px; display: inline-block; }
 
         .sticker-card.status-si { background: var(--have-color); border-color: #48bb78; }
         .sticker-card.status-si .sticker-id { color: var(--have-text); }
@@ -149,7 +183,7 @@
 
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
-            <h2>CHECK LIST</h2>
+            <h2>GMT QA SYSTEM</h2>
             <input type="text" id="usernameField" placeholder="Usuario">
             <input type="password" id="passwordField" placeholder="Contraseña">
             <button onclick="loginUser()">Ingresar / Registrar</button>
@@ -159,8 +193,8 @@
     <div class="app-container" id="appContainer">
         <header>
             <div>
-                <h1>CHEK LIST</h1>
-                <p>Colección Mundial 2026</p>
+                <h1>GMT QA SYSTEM</h1>
+                <p>Colección Panini Mundial 2026</p>
             </div>
             <div style="text-align: right;">
                 <p style="margin-bottom: 5px;">Usuario: <span id="sessionUserLabel" style="font-weight:bold;">-</span></p>
@@ -188,7 +222,7 @@
         </div>
 
         <div class="filter-section">
-            <input type="text" id="searchBar" placeholder="Buscar estampa por código o descripción..." oninput="filterStickers()">
+            <input type="text" id="searchBar" placeholder="Buscar estampa por código..." oninput="filterStickers()">
             <select id="groupFilter" onchange="filterStickers()">
                 <option value="ALL">Todos los grupos</option>
             </select>
@@ -199,13 +233,16 @@
             </select>
         </div>
 
+        <div class="section-counter-badge" id="sectionCounterBadge">
+            Filtrado actual: Mostrando todas las estampas.
+        </div>
+
         <div class="items-grid" id="stickersGrid"></div>
     </div>
 
     <div class="toast" id="toastMessage">Progreso guardado automáticamente.</div>
 
     <script>
-        // CONFIGURACIÓN EXPANDIDA DE LOS 48 PAÍSES COMPLETOS
         const PAISES_CONFIG = [
             { grupo: "ARG", nombre: "Argentina", count: 20 },
             { grupo: "AUS", nombre: "Australia", count: 20 },
@@ -250,7 +287,6 @@
             { grupo: "USA", nombre: "Estados Unidos", count: 20 },
             { grupo: "VEN", nombre: "Venezuela", count: 20 },
             { grupo: "WAL", nombre: "Gales", count: 20 },
-            // Agregados los restantes de la lista para completar los bloques
             { grupo: "DZA", nombre: "Argelia", count: 20 },
             { grupo: "RSA", nombre: "Sudáfrica", count: 20 },
             { grupo: "HON", nombre: "Honduras", count: 20 },
@@ -260,17 +296,15 @@
 
         const STICKERS_BASE = [];
 
-        // Iniciales Especiales (00 0 al 00 19)
         for (let i = 0; i <= 19; i++) {
             STICKERS_BASE.push({
                 id: `00 ${i}`,
-                desc: i === 0 ? "Trofeo de la Copa del Mundo" : i === 1 ? "Logo" : `Estampa Especial Conmemorativa ${i}`,
+                desc: i === 0 ? "Trofeo de la Copa del Mundo" : i === 1 ? "Logo Panini" : `Estampa Especial Conmemorativa ${i}`,
                 tipo: "Holográfica Especial",
                 grupo: "Especiales Inicio"
             });
         }
 
-        // Generación dinámica de los países
         PAISES_CONFIG.forEach(p => {
             for (let num = 1; num <= p.count; num++) {
                 let desc = `Jugador ${num} - ${p.nombre}`;
@@ -286,12 +320,10 @@
             }
         });
 
-        // Coca-Cola Especiales
         for (let i = 1; i <= 14; i++) {
             STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", grupo: "Coca-Cola" });
         }
         
-        // Ajuste milimétrico final para amarrar las 989 estampas exactas
         const faltantesRelleno = 989 - STICKERS_BASE.length;
         for (let i = 1; i <= faltantesRelleno; i++) {
             STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", grupo: "Leyendas" });
@@ -331,7 +363,6 @@
             });
         }
 
-        // --- LA FUNCIÓN ORIGINAL SE QUEDA EXACTAMENTE COMO LA TRABAJABAS ---
         function loginUser() {
             const username = document.getElementById("usernameField").value.trim();
             const password = document.getElementById("passwordField").value.trim();
@@ -404,6 +435,46 @@
             document.getElementById("kpiTengo").textContent = tengo;
             document.getElementById("kpiFaltan").textContent = faltan;
             document.getElementById("kpiProgreso").textContent = `${porcentaje}%`;
+
+            updateSectionCounter();
+        }
+
+        // Modificada para calcular porcentajes individuales y cambiar color al completarse
+        function updateSectionCounter() {
+            const groupSel = document.getElementById("groupFilter").value;
+            const currentMap = userProgress[currentUser] || {};
+            
+            let filteredStickers = STICKERS_BASE;
+            if (groupSel !== "ALL") {
+                filteredStickers = STICKERS_BASE.filter(s => s.grupo === groupSel);
+            }
+
+            let totalSec = filteredStickers.length;
+            let tengoSec = filteredStickers.filter(s => currentMap[s.id] === "SI").length;
+            let faltanSec = totalSec - tengoSec;
+            
+            // Cálculo del porcentaje de esta sección específica
+            let porcSec = totalSec > 0 ? ((tengoSec / totalSec) * 100).toFixed(1) : 0;
+
+            const labelBadge = document.getElementById("sectionCounterBadge");
+            
+            if (tengoSec === totalSec && totalSec > 0) {
+                // Sección COMPLETADA al 100%
+                labelBadge.className = "section-counter-badge completed";
+                if (groupSel === "ALL") {
+                    labelBadge.innerHTML = `🎉 <strong>¡ÁLBUM COMPLETADO AL 100%!</strong> | Total: ${totalSec} | Tienes: ${tengoSec} | Faltan: ${faltanSec}`;
+                } else {
+                    labelBadge.innerHTML = `🎉 <strong>¡Sección [ ${groupSel} ] Completada! (100%)</strong> | Tienes las ${tengoSec} estampas registradas.`;
+                }
+            } else {
+                // Sección INCOMPLETA (Progreso regular)
+                labelBadge.className = "section-counter-badge";
+                if (groupSel === "ALL") {
+                    labelBadge.innerHTML = `🌍 <strong>Sección: Todas las Secciones</strong> | Total en vista: ${totalSec} | Tienes: <strong>${tengoSec}</strong> | Te faltan: <strong>${faltanSec}</strong> | Progreso: <strong>${porcSec}%</strong>`;
+                } else {
+                    labelBadge.innerHTML = `🔍 <strong>Sección [ ${groupSel} ]</strong> | Total: ${totalSec} | Tienes: <strong style="color:#22543d">${tengoSec}</strong> | Faltan: <strong style="color:#742a2a">${faltanSec}</strong> | Completado: <strong>${porcSec}%</strong>`;
+                }
+            }
         }
 
         function renderGrid() {
@@ -435,6 +506,8 @@
 
                 grid.appendChild(card);
             });
+
+            updateSectionCounter();
         }
 
         function filterStickers() {
