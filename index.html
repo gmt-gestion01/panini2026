@@ -3,133 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist Panini Mundial 2026</title>
+    <title>United 2026 - Panini Checklist</title>
+    
+    <!-- Librerías de Animación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+
     <style>
         :root {
-            --fifa-maroon: #8a1538;
-            --fifa-gold: #b39453;
-            --bg: #f4f7f6;
-            --card-bg: #ffffff;
-            --text: #2d3748;
-            --have-bg: #c6f6d5;
-            --have-text: #22543d;
-            --border: #e2e8f0;
+            --usa-blue: #002868;
+            --mex-green: #006341; /* Verde más profundo y vibrante */
+            --can-red: #EF3340;
+            --fifa-gold: #d4af37;
+            --glass: rgba(255, 255, 255, 0.82);
+            --have-bg: #dcfce7;
+            --have-border: #16a34a;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-        /* Login Screen */
-        .login-screen {
+        /* Contenedor del fondo animado */
+        #vanta-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+        }
+
+        /* Capa Bandera Tricolor con VERDE REFORZADO */
+        .flag-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--fifa-maroon), #5a0d24);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
+            background: linear-gradient(135deg, 
+                rgba(0, 40, 104, 0.35) 0%, 
+                rgba(0, 99, 65, 0.6) 45%,  /* Verde más opaco y centrado */
+                rgba(0, 99, 65, 0.6) 55%, 
+                rgba(239, 51, 64, 0.35) 100%);
+            z-index: -1; pointer-events: none;
         }
-        .login-card {
-            background: white; padding: 35px; border-radius: 15px; width: 90%; max-width: 380px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .login-card h2 { color: var(--fifa-maroon); margin-bottom: 25px; font-size: 1.8rem; }
-        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; }
-        .login-card button { 
-            width: 100%; padding: 12px; background: var(--fifa-maroon); color: white; 
-            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
-            transition: background 0.3s;
-        }
-        .login-card button:hover { background: #6b102b; }
 
-        /* App Layout */
-        .app-container { display: none; max-width: 1100px; margin: 0 auto; padding: 10px; }
+        body { color: #1a202c; min-height: 100vh; overflow-x: hidden; }
+
+        /* Login Estilo Píldora */
+        .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-card {
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 50px 40px; border-radius: 50px;
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        .login-card h2 { color: var(--usa-blue); font-weight: 900; font-size: 2.5rem; margin-bottom: 5px; letter-spacing: -1px; }
+        .login-card input { 
+            width: 100%; padding: 15px 25px; margin-bottom: 15px; 
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 30px; outline: none; font-size: 1rem;
+        }
+        .login-card button { 
+            width: 100%; padding: 15px; background: var(--usa-blue); color: white;
+            border: none; border-radius: 30px; font-weight: bold; cursor: pointer;
+            transition: 0.4s; font-size: 1.1rem;
+        }
+        .login-card button:hover { background: var(--mex-green); transform: scale(1.03); }
+
+        /* Layout Principal */
+        .app-container { display: none; padding: 25px; max-width: 1200px; margin: 0 auto; }
         
         header { 
-            background: var(--fifa-maroon); color: white; padding: 20px; border-radius: 12px; 
-            margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: var(--glass); backdrop-filter: blur(15px);
+            padding: 20px 40px; border-radius: 100px; margin-bottom: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid white;
         }
-        header h1 { font-size: 1.4rem; letter-spacing: 1px; }
 
         .dashboard { 
-            display: grid; grid-template-columns: repeat(4, 1fr); 
-            gap: 10px; margin-bottom: 15px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; margin-bottom: 30px; 
         }
-        .kpi { background: white; padding: 12px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--fifa-gold); }
-        .kpi span { display: block; font-size: 1.4rem; font-weight: bold; color: var(--fifa-maroon); }
-        .kpi label { font-size: 0.7rem; color: #718096; text-transform: uppercase; font-weight: bold; }
+        .kpi { 
+            background: var(--glass); backdrop-filter: blur(10px);
+            padding: 20px; border-radius: 35px; text-align: center; border: 1px solid white;
+        }
+        .kpi span { display: block; font-size: 1.8rem; font-weight: 900; line-height: 1; margin-bottom: 5px; }
+        .kpi label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #555; letter-spacing: 1px; }
 
-        /* Search & Filters */
+        /* Buscador */
         .search-box {
-            background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px;
-            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; border: 1px solid var(--border);
+            background: var(--glass); padding: 20px 30px; border-radius: 40px; margin-bottom: 30px;
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; border: 1px solid white;
         }
-        .search-box input, .search-box select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
+        .search-box input, .search-box select { 
+            padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(0,0,0,0.08); outline: none; font-weight: 600;
+        }
 
-        /* Grid */
+        /* Grid de Estampas */
         .items-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
-            gap: 10px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); 
+            gap: 15px; 
         }
         .sticker-card { 
-            background: white; border: 1px solid var(--border); border-radius: 8px;
-            padding: 12px 5px; text-align: center; cursor: pointer; transition: all 0.2s;
-            user-select: none; position: relative; overflow: hidden;
+            background: white; border-radius: 30px; padding: 22px 10px;
+            text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05); position: relative; border: 2px solid transparent;
         }
-        .sticker-card:active { transform: scale(0.95); }
-        .sticker-card.status-si { background: var(--have-bg); border-color: #48bb78; }
-        
-        .s-id { font-weight: 800; font-size: 1.1rem; color: var(--fifa-maroon); display: block; }
-        .s-desc { font-size: 0.65rem; color: #4a5568; margin-top: 5px; font-weight: 600; text-transform: uppercase; }
-        .s-group { font-size: 0.55rem; color: #a0aec0; margin-top: 3px; }
+        .sticker-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
 
-        /* Badge for Escudo/Squad */
+        /* Estampas Marcadas con Palomita (Checkmark) */
+        .sticker-card.status-si { 
+            background: var(--have-bg); 
+            border-color: var(--have-border); 
+        }
+        .sticker-card.status-si::before {
+            content: '✓';
+            position: absolute; top: 10px; left: 15px;
+            background: var(--have-border); color: white;
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: bold;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .s-id { font-weight: 900; font-size: 1.4rem; color: var(--usa-blue); position: relative; z-index: 1; }
+        .s-desc { font-size: 0.7rem; color: #4a5568; margin-top: 5px; font-weight: 800; text-transform: uppercase; }
+        .s-group { font-size: 0.6rem; color: #888; margin-top: 3px; font-weight: 700; }
+
         .badge {
-            position: absolute; top: 0; right: 0; background: var(--fifa-gold);
-            color: white; font-size: 0.5rem; padding: 2px 5px; border-bottom-left-radius: 5px;
+            position: absolute; top: -5px; right: -5px; background: var(--fifa-gold);
+            color: white; font-size: 0.65rem; padding: 5px 12px; border-radius: 20px;
+            font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 3;
         }
 
         @media (max-width: 600px) {
+            .search-box { grid-template-columns: 1fr; border-radius: 30px; }
+            .items-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            header { padding: 15px 25px; border-radius: 30px; flex-direction: column; gap: 8px; text-align: center; }
             .dashboard { grid-template-columns: repeat(2, 1fr); }
-            .search-box { grid-template-columns: 1fr; }
-            .items-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
 <body>
 
+    <div id="vanta-canvas"></div>
+    <div class="flag-overlay"></div>
+
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
-            <h2>🏆 CONTROL 2026</h2>
-            <input type="text" id="usernameField" placeholder="Nombre de Usuario">
+            <h2>UNITED 2026</h2>
+            <p style="color:#666; font-weight:700; text-transform: uppercase; letter-spacing: 1px;">Mi Álbum Virtual</p><br>
+            <input type="text" id="usernameField" placeholder="Usuario">
             <input type="password" id="passwordField" placeholder="Contraseña">
             <button onclick="loginUser()">INGRESAR AL ÁLBUM</button>
-            <p style="margin-top:15px; font-size:0.8rem; color:#666;">Los datos se guardan localmente en este navegador.</p>
         </div>
     </div>
 
     <div class="app-container" id="appContainer">
         <header>
             <div>
-                <h1>PANINI MUNDIAL 2026</h1>
-                <small id="userDisplay" style="color: var(--fifa-gold); font-weight: bold;"></small>
+                <h1 style="color: var(--usa-blue); font-weight: 900;">🏆 UNITED 2026</h1>
+                <small id="userDisplay" style="color: var(--mex-green); font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;"></small>
             </div>
-            <button onclick="location.reload()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:8px 15px; border-radius:8px; cursor:pointer;">Cerrar Sesión</button>
+            <button onclick="location.reload()" style="background: var(--can-red); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s; box-shadow: 0 4px 10px rgba(239, 51, 64, 0.3);">SALIR</button>
         </header>
 
         <div class="dashboard">
-            <div class="kpi"><span id="kpiTotal">0</span><label>Total</label></div>
-            <div class="kpi"><span id="kpiTengo">0</span><label>Tengo</label></div>
-            <div class="kpi"><span id="kpiFaltan">0</span><label>Faltan</label></div>
-            <div class="kpi"><span id="kpiProgreso">0%</span><label>Logro</label></div>
+            <div class="kpi"><span id="kpiTotal" style="color: var(--usa-blue);">0</span><label>Total</label></div>
+            <div class="kpi"><span id="kpiTengo" style="color: var(--mex-green);">0</span><label>Tengo</label></div>
+            <div class="kpi"><span id="kpiFaltan" style="color: var(--can-red);">0</span><label>Faltan</label></div>
+            <div class="kpi"><span id="kpiProgreso" style="color: var(--fifa-gold);">0.00%</span><label>Logro</label></div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="searchBar" placeholder="Buscar por código o país..." oninput="renderGrid()">
+            <input type="text" id="searchBar" placeholder="🔍 Buscar por código o país..." oninput="renderGrid()">
             <select id="groupFilter" onchange="renderGrid()">
-                <option value="ALL">Todas las Secciones</option>
+                <option value="ALL">📍 Todas las Secciones</option>
             </select>
             <select id="statusFilter" onchange="renderGrid()">
-                <option value="ALL">Si y No</option>
-                <option value="SI">Tengo</option>
-                <option value="NO">Faltan</option>
+                <option value="ALL">📊 Ver Todos</option>
+                <option value="SI">✅ Ya los tengo</option>
+                <option value="NO">❌ Me faltan</option>
             </select>
         </div>
 
@@ -137,7 +189,23 @@
     </div>
 
     <script>
-        // Lista exacta de 48 países según tu requerimiento (añadidos Venezuela e Irak para completar 48)
+        // Fondo VANTA WAVES con efecto de ondulación de bandera reforzado
+        VANTA.WAVES({
+            el: "#vanta-canvas",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x051a30, // Azul base oscuro
+            shininess: 45.00, // Más brillo para notar las ondas
+            waveHeight: 20.00, // Regresamos la ondulación alta
+            waveSpeed: 0.85,  // Velocidad moderada para que se note el movimiento
+            zoom: 0.95        // Zoom un poco más abierto para ver la forma de la onda
+        });
+
         const LISTA_PAISES = [
             { n: "Canadá", c: "CAN" }, { n: "Estados Unidos", c: "USA" }, { n: "México", c: "MEX" },
             { n: "Argentina", c: "ARG" }, { n: "Brasil", c: "BRA" }, { n: "Colombia", c: "COL" },
@@ -158,44 +226,33 @@
         ].sort((a, b) => a.n.localeCompare(b.n));
 
         const STICKERS_BASE = [];
-
-        // 1. FWC (00 + 1-19) = 20 estampas
         for (let i = 0; i <= 19; i++) {
             let label = i === 0 ? "00" : i;
-            STICKERS_BASE.push({ id: `FWC ${label}`, desc: (i==0 || i==19) ? "Especial FWC" : "FIFA Historico", grupo: "FWC" });
+            STICKERS_BASE.push({ id: `FWC ${label}`, desc: (i==0||i==19)?"Especial":"FIFA", grupo: "FWC" });
         }
-
-        // 2. Equipos (48 países * 20 estampas) = 960 estampas
         LISTA_PAISES.forEach(p => {
             for (let i = 1; i <= 20; i++) {
-                let d = `Jugador ${i}`;
-                let tag = "";
-                if(i === 1) { d = "Escudo"; tag = "ESCUDO"; }
-                if(i === 13) { d = "Equipo"; tag = "SQUAD"; }
+                let d = `Jugador ${i}`; let tag = "";
+                if(i === 1) { d = "Escudo"; tag = "ESC"; }
+                if(i === 13) { d = "Equipo"; tag = "SQD"; }
                 STICKERS_BASE.push({ id: `${p.c} ${i}`, desc: d, grupo: p.n, tag: tag });
             }
         });
-
-        // 3. Coca Cola = 14 estampas
         for (let i = 1; i <= 14; i++) {
-            STICKERS_BASE.push({ id: `CC ${i}`, desc: "Coca-Cola Especial", grupo: "COCA-COLA" });
+            STICKERS_BASE.push({ id: `CC ${i}`, desc: "Coca-Cola", grupo: "COCA-COLA" });
         }
 
-        // TOTAL: 20 + 960 + 14 = 994
-
-        let userProgress = JSON.parse(localStorage.getItem("panini_db_2026")) || {};
+        let userProgress = JSON.parse(localStorage.getItem("panini_v5_save")) || {};
         let currentUser = null;
 
         function loginUser() {
             const u = document.getElementById("usernameField").value.trim().toUpperCase();
-            if(!u) return alert("Ingresa un usuario");
+            if(!u) return alert("Por favor ingresa un nombre de usuario.");
             currentUser = u;
             if(!userProgress[currentUser]) userProgress[currentUser] = {};
-            
             document.getElementById("loginScreen").style.display = "none";
             document.getElementById("appContainer").style.display = "block";
-            document.getElementById("userDisplay").textContent = "USUARIO: " + currentUser;
-            
+            document.getElementById("userDisplay").textContent = "Hola, " + currentUser;
             poblarFiltroGrupos();
             renderGrid();
         }
@@ -215,59 +272,51 @@
             const nuevo = actual === "SI" ? "NO" : "SI";
             userProgress[currentUser][id] = nuevo;
             
-            if(nuevo === "SI") element.classList.add("status-si");
+            if (nuevo === "SI") element.classList.add("status-si");
             else element.classList.remove("status-si");
-            
-            localStorage.setItem("panini_db_2026", JSON.stringify(userProgress));
+
+            localStorage.setItem("panini_v5_save", JSON.stringify(userProgress));
             actualizarKPIs();
         }
 
         function actualizarKPIs() {
             const total = STICKERS_BASE.length;
             let tengo = 0;
-            STICKERS_BASE.forEach(s => {
-                if(userProgress[currentUser][s.id] === "SI") tengo++;
-            });
-
+            STICKERS_BASE.forEach(s => { if(userProgress[currentUser][s.id] === "SI") tengo++; });
+            
             document.getElementById("kpiTotal").textContent = total;
             document.getElementById("kpiTengo").textContent = tengo;
             document.getElementById("kpiFaltan").textContent = total - tengo;
-            document.getElementById("kpiProgreso").textContent = Math.round((tengo/total)*100) + "%";
+            
+            // PORCENTAJE CON 2 DECIMALES
+            const porcentaje = ((tengo / total) * 100).toFixed(2);
+            document.getElementById("kpiProgreso").textContent = porcentaje + "%";
         }
 
         function renderGrid() {
             const grid = document.getElementById("stickersGrid");
             const busqueda = document.getElementById("searchBar").value.toLowerCase();
-            const filtroG = document.getElementById("groupFilter").value;
-            const filtroS = document.getElementById("statusFilter").value;
-            
+            const fG = document.getElementById("groupFilter").value;
+            const fS = document.getElementById("statusFilter").value;
             grid.innerHTML = "";
-            const fragmento = document.createDocumentFragment();
+            const frag = document.createDocumentFragment();
 
             STICKERS_BASE.forEach(s => {
                 const status = userProgress[currentUser][s.id] || "NO";
-                
-                // Filtros
-                if(filtroG !== "ALL" && s.grupo !== filtroG) return;
-                if(filtroS !== "ALL" && status !== filtroS) return;
+                if(fG !== "ALL" && s.grupo !== fG) return;
+                if(fS !== "ALL" && status !== fS) return;
                 if(busqueda && !s.id.toLowerCase().includes(busqueda) && !s.grupo.toLowerCase().includes(busqueda)) return;
 
                 const card = document.createElement("div");
                 card.className = `sticker-card ${status === 'SI' ? 'status-si' : ''}`;
                 card.onclick = () => toggleSticker(s.id, card);
-                
-                let badgeHTML = s.tag ? `<div class="badge">${s.tag}</div>` : "";
-                
-                card.innerHTML = `
-                    ${badgeHTML}
-                    <span class="s-id">${s.id}</span>
-                    <span class="s-desc">${s.desc}</span>
-                    <span class="s-group">${s.grupo}</span>
-                `;
-                fragmento.appendChild(card);
+                card.innerHTML = `${s.tag ? `<div class="badge">${s.tag}</div>` : ""}
+                    <div class="s-id">${s.id}</div>
+                    <div class="s-desc">${s.desc}</div>
+                    <div class="s-group">${s.grupo}</div>`;
+                frag.appendChild(card);
             });
-            
-            grid.appendChild(fragmento);
+            grid.appendChild(frag);
             actualizarKPIs();
         }
     </script>
