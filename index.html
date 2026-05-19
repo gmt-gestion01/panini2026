@@ -69,7 +69,7 @@
         .login-card input {
             width: 100%; padding: 12px; margin-bottom: 15px;
             border: 1px solid var(--border-color); border-radius: 6px;
-            font-size: 16px; /* Evita zoom automático en móviles */
+            font-size: 16px;
         }
 
         .login-card button {
@@ -127,7 +127,6 @@
             font-size: 14px; background-color: #fff;
         }
 
-        /* Barra informativa por país/sección optimizada */
         .section-counter-badge {
             background-color: #edf2f7;
             border: 1px solid var(--border-color);
@@ -140,7 +139,6 @@
             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
 
-        /* Estilo especial cuando la sección se completa al 100% */
         .section-counter-badge.completed {
             background-color: #c6f6d5;
             border-color: #48bb78;
@@ -252,7 +250,7 @@
             { grupo: "CAN", nombre: "Canadá", count: 20 },
             { grupo: "CHL", nombre: "Chile", count: 20 },
             { grupo: "CIV", nombre: "Costa de Marfil", count: 20 },
-            { grupo: "CMR", nombre: "Camerún", count: 20 },
+            { grupo: "CMR", module: "Camerún", count: 20 },
             { grupo: "COL", nombre: "Colombia", count: 20 },
             { grupo: "CRC", nombre: "Costa Rica", count: 20 },
             { grupo: "CRO", nombre: "Croacia", count: 20 },
@@ -307,26 +305,26 @@
 
         PAISES_CONFIG.forEach(p => {
             for (let num = 1; num <= p.count; num++) {
-                let desc = `Jugador ${num} - ${p.nombre}`;
+                let desc = `Jugador ${num} - ${p.nombre || 'Camerún'}`;
                 let tipo = "Regular";
                 if (num === 1) {
-                    desc = `Escudo Oficial de ${p.nombre}`;
+                    desc = `Escudo Oficial de ${p.nombre || 'Camerún'}`;
                     tipo = "Escudo Holográfico";
                 } else if (num === 13) {
-                    desc = `Foto de Equipo (Squad) - ${p.nombre}`;
+                    desc = `Foto de Equipo (Squad) - ${p.nombre || 'Camerún'}`;
                     tipo = "Equipo Completo";
                 }
-                STICKERS_BASE.push({ id: `${p.grupo} ${num}`, desc: desc, tipo: tipo, grupo: p.grupo });
+                STICKERS_BASE.push({ id: `${p.grupo} ${num}`, desc: desc, tipo: tipo, group: p.grupo });
             }
         });
 
         for (let i = 1; i <= 14; i++) {
-            STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", grupo: "Coca-Cola" });
+            STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", group: "Coca-Cola" });
         }
         
         const faltantesRelleno = 989 - STICKERS_BASE.length;
         for (let i = 1; i <= faltantesRelleno; i++) {
-            STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", grupo: "Leyendas" });
+            STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", group: "Leyendas" });
         }
 
         let userProgress = {};
@@ -353,7 +351,7 @@
 
         function buildGroupFilter() {
             const filter = document.getElementById("groupFilter");
-            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.grupo))];
+            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.group))];
             
             distinctGroups.forEach(g => {
                 const opt = document.createElement("option");
@@ -439,27 +437,24 @@
             updateSectionCounter();
         }
 
-        // Modificada para calcular porcentajes individuales y cambiar color al completarse
         function updateSectionCounter() {
             const groupSel = document.getElementById("groupFilter").value;
             const currentMap = userProgress[currentUser] || {};
             
             let filteredStickers = STICKERS_BASE;
             if (groupSel !== "ALL") {
-                filteredStickers = STICKERS_BASE.filter(s => s.grupo === groupSel);
+                filteredStickers = STICKERS_BASE.filter(s => s.group === groupSel);
             }
 
             let totalSec = filteredStickers.length;
             let tengoSec = filteredStickers.filter(s => currentMap[s.id] === "SI").length;
             let faltanSec = totalSec - tengoSec;
             
-            // Cálculo del porcentaje de esta sección específica
             let porcSec = totalSec > 0 ? ((tengoSec / totalSec) * 100).toFixed(1) : 0;
 
             const labelBadge = document.getElementById("sectionCounterBadge");
             
             if (tengoSec === totalSec && totalSec > 0) {
-                // Sección COMPLETADA al 100%
                 labelBadge.className = "section-counter-badge completed";
                 if (groupSel === "ALL") {
                     labelBadge.innerHTML = `🎉 <strong>¡ÁLBUM COMPLETADO AL 100%!</strong> | Total: ${totalSec} | Tienes: ${tengoSec} | Faltan: ${faltanSec}`;
@@ -467,7 +462,6 @@
                     labelBadge.innerHTML = `🎉 <strong>¡Sección [ ${groupSel} ] Completada! (100%)</strong> | Tienes las ${tengoSec} estampas registradas.`;
                 }
             } else {
-                // Sección INCOMPLETA (Progreso regular)
                 labelBadge.className = "section-counter-badge";
                 if (groupSel === "ALL") {
                     labelBadge.innerHTML = `🌍 <strong>Sección: Todas las Secciones</strong> | Total en vista: ${totalSec} | Tienes: <strong>${tengoSec}</strong> | Te faltan: <strong>${faltanSec}</strong> | Progreso: <strong>${porcSec}%</strong>`;
@@ -491,7 +485,7 @@
                 const status = currentMap[s.id] || "NO";
 
                 if(query && !s.id.toLowerCase().includes(query) && !s.desc.toLowerCase().includes(query)) return;
-                if(groupSel !== "ALL" && s.grupo !== groupSel) return;
+                if(groupSel !== "ALL" && s.group !== groupSel) return;
                 if(statusSel !== "ALL" && status !== statusSel) return;
 
                 const card = document.createElement("div");
