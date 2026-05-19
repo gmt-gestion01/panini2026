@@ -250,7 +250,7 @@
             { grupo: "CAN", nombre: "Canadá", count: 20 },
             { grupo: "CHL", nombre: "Chile", count: 20 },
             { grupo: "CIV", nombre: "Costa de Marfil", count: 20 },
-            { grupo: "CMR", module: "Camerún", count: 20 },
+            { grupo: "CMR", nombre: "Camerún", count: 20 },
             { grupo: "COL", nombre: "Colombia", count: 20 },
             { grupo: "CRC", nombre: "Costa Rica", count: 20 },
             { grupo: "CRO", nombre: "Croacia", count: 20 },
@@ -294,6 +294,7 @@
 
         const STICKERS_BASE = [];
 
+        // 1. Especiales Inicio Reestablecidas Correctamente
         for (let i = 0; i <= 19; i++) {
             STICKERS_BASE.push({
                 id: `00 ${i}`,
@@ -303,28 +304,31 @@
             });
         }
 
+        // 2. Bloques de Países
         PAISES_CONFIG.forEach(p => {
             for (let num = 1; num <= p.count; num++) {
-                let desc = `Jugador ${num} - ${p.nombre || 'Camerún'}`;
+                let desc = `Jugador ${num} - ${p.nombre}`;
                 let tipo = "Regular";
                 if (num === 1) {
-                    desc = `Escudo Oficial de ${p.nombre || 'Camerún'}`;
+                    desc = `Escudo Oficial de ${p.nombre}`;
                     tipo = "Escudo Holográfico";
                 } else if (num === 13) {
-                    desc = `Foto de Equipo (Squad) - ${p.nombre || 'Camerún'}`;
+                    desc = `Foto de Equipo (Squad) - ${p.nombre}`;
                     tipo = "Equipo Completo";
                 }
-                STICKERS_BASE.push({ id: `${p.grupo} ${num}`, desc: desc, tipo: tipo, group: p.grupo });
+                STICKERS_BASE.push({ id: `${p.grupo} ${num}`, desc: desc, tipo: tipo, grupo: p.grupo });
             }
         });
 
+        // 3. Coca-Cola Especiales
         for (let i = 1; i <= 14; i++) {
-            STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", group: "Coca-Cola" });
+            STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", grupo: "Coca-Cola" });
         }
         
+        // 4. Leyendas de Ajuste Reestablecidas para amarrar las 989 exactas
         const faltantesRelleno = 989 - STICKERS_BASE.length;
         for (let i = 1; i <= faltantesRelleno; i++) {
-            STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", group: "Leyendas" });
+            STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", grupo: "Leyendas" });
         }
 
         let userProgress = {};
@@ -351,7 +355,7 @@
 
         function buildGroupFilter() {
             const filter = document.getElementById("groupFilter");
-            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.group))];
+            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.grupo))];
             
             distinctGroups.forEach(g => {
                 const opt = document.createElement("option");
@@ -443,7 +447,7 @@
             
             let filteredStickers = STICKERS_BASE;
             if (groupSel !== "ALL") {
-                filteredStickers = STICKERS_BASE.filter(s => s.group === groupSel);
+                filteredStickers = STICKERS_BASE.filter(s => s.grupo === groupSel);
             }
 
             let totalSec = filteredStickers.length;
@@ -485,7 +489,7 @@
                 const status = currentMap[s.id] || "NO";
 
                 if(query && !s.id.toLowerCase().includes(query) && !s.desc.toLowerCase().includes(query)) return;
-                if(groupSel !== "ALL" && s.group !== groupSel) return;
+                if(groupSel !== "ALL" && s.grupo !== groupSel) return;
                 if(statusSel !== "ALL" && status !== statusSel) return;
 
                 const card = document.createElement("div");
