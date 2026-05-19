@@ -33,11 +33,9 @@
             line-height: 1.5;
         }
 
-        /* Diseño responsivo para pantallas pequeñas (Celulares) */
         @media (max-width: 600px) {
             body { padding: 10px; }
             header { flex-direction: column; text-align: center; gap: 12px; }
-            header style { text-align: center !important; }
             .filter-section { flex-direction: column; gap: 10px; }
             .filter-section input, .filter-section select { width: 100%; }
             .kpi-card { padding: 12px; }
@@ -241,60 +239,72 @@
     <div class="toast" id="toastMessage">Progreso guardado automáticamente.</div>
 
     <script>
+        // Los 48 países oficiales clasificados y divididos por confederación para el formato extendido de la FIFA
         const PAISES_CONFIG = [
-            { grupo: "ARG", nombre: "Argentina", count: 20 },
-            { grupo: "AUS", nombre: "Australia", count: 20 },
-            { grupo: "AUT", nombre: "Austria", count: 20 },
-            { grupo: "BEL", nombre: "Bélgica", count: 20 },
-            { grupo: "BRA", nombre: "Brasil", count: 20 },
-            { grupo: "CAN", nombre: "Canadá", count: 20 },
-            { grupo: "CHL", nombre: "Chile", count: 20 },
-            { grupo: "CIV", nombre: "Costa de Marfil", count: 20 },
-            { grupo: "CMR", nombre: "Camerún", count: 20 },
-            { grupo: "COL", nombre: "Colombia", count: 20 },
-            { grupo: "CRC", nombre: "Costa Rica", count: 20 },
-            { grupo: "CRO", nombre: "Croacia", count: 20 },
-            { grupo: "DEN", nombre: "Dinamarca", count: 20 },
-            { grupo: "ECU", nombre: "Ecuador", count: 20 },
-            { grupo: "EGY", nombre: "Egipto", count: 20 },
-            { grupo: "ENG", nombre: "Inglaterra", count: 20 },
-            { grupo: "ESP", nombre: "España", count: 20 },
-            { grupo: "FRA", nombre: "Francia", count: 20 },
-            { grupo: "GER", nombre: "Alemania", count: 20 },
-            { grupo: "GHA", nombre: "Ghana", count: 20 },
-            { grupo: "IRN", nombre: "Irán", count: 20 },
-            { grupo: "ITA", nombre: "Italia", count: 20 },
-            { grupo: "JAM", nombre: "Jamaica", count: 20 },
-            { grupo: "JPN", nombre: "Japón", count: 20 },
-            { grupo: "KOR", nombre: "Corea del Sur", count: 20 },
-            { grupo: "KSA", nombre: "Arabia Saudita", count: 20 },
-            { grupo: "MAR", nombre: "Marruecos", count: 20 },
-            { grupo: "MEX", nombre: "México", count: 20 },
-            { grupo: "NED", nombre: "Países Bajos", count: 20 },
-            { grupo: "NGA", nombre: "Nigeria", count: 20 },
-            { grupo: "NZL", nombre: "Nueva Zelanda", count: 20 },
-            { grupo: "PAN", nombre: "Panamá", count: 20 },
-            { grupo: "PER", nombre: "Perú", count: 20 },
-            { grupo: "POR", nombre: "Portugal", count: 20 },
-            { grupo: "SEN", nombre: "Senegal", count: 20 },
-            { grupo: "SRB", nombre: "Serbia", count: 20 },
-            { grupo: "SUI", nombre: "Suiza", count: 20 },
-            { grupo: "SWE", nombre: "Suecia", count: 20 },
-            { grupo: "TUN", nombre: "Túnez", count: 20 },
-            { grupo: "URU", nombre: "Uruguay", count: 20 },
-            { grupo: "USA", nombre: "Estados Unidos", count: 20 },
-            { grupo: "VEN", nombre: "Venezuela", count: 20 },
-            { grupo: "WAL", nombre: "Gales", count: 20 },
-            { grupo: "DZA", nombre: "Argelia", count: 20 },
-            { grupo: "RSA", nombre: "Sudáfrica", count: 20 },
-            { grupo: "HON", nombre: "Honduras", count: 20 },
-            { grupo: "PAR", nombre: "Paraguay", count: 20 },
-            { grupo: "UKR", nombre: "Ucrania", count: 20 }
+            // NORTE, CENTROAMÉRICA Y CARIBE (CONCACAF)
+            { grupo: "USA", nombre: "Estados Unidos", count: 18 },
+            { grupo: "MEX", nombre: "México", count: 18 },
+            { grupo: "CAN", nombre: "Canadá", count: 18 },
+            { grupo: "CRC", nombre: "Costa Rica", count: 18 },
+            { grupo: "PAN", nombre: "Panamá", count: 18 },
+            { grupo: "JAM", nombre: "Jamaica", count: 18 },
+            { grupo: "HON", nombre: "Honduras", count: 18 },
+
+            // SUDAMÉRICA (CONMEBOL)
+            { grupo: "ARG", nombre: "Argentina", count: 18 },
+            { grupo: "BRA", nombre: "Brasil", count: 18 },
+            { grupo: "URU", nombre: "Uruguay", count: 18 },
+            { grupo: "COL", nombre: "Colombia", count: 18 },
+            { grupo: "ECU", nombre: "Ecuador", count: 18 },
+            { grupo: "PER", nombre: "Perú", count: 18 },
+            { grupo: "CHL", nombre: "Chile", count: 18 },
+            { grupo: "VEN", nombre: "Venezuela", count: 18 },
+            { grupo: "PAR", nombre: "Paraguay", count: 18 },
+
+            // EUROPA (UEFA)
+            { grupo: "FRA", nombre: "Francia", count: 18 },
+            { grupo: "ENG", nombre: "Inglaterra", count: 18 },
+            { grupo: "ESP", nombre: "España", count: 18 },
+            { grupo: "GER", nombre: "Alemania", count: 18 },
+            { grupo: "ITA", nombre: "Italia", count: 18 },
+            { grupo: "POR", nombre: "Portugal", count: 18 },
+            { grupo: "NED", nombre: "Países Bajos", count: 18 },
+            { grupo: "BEL", nombre: "Bélgica", count: 18 },
+            { grupo: "CRO", nombre: "Croacia", count: 18 },
+            { grupo: "SUI", nombre: "Suiza", count: 18 },
+            { grupo: "DEN", nombre: "Dinamarca", count: 18 },
+            { grupo: "AUT", nombre: "Austria", count: 18 },
+            { grupo: "SRB", nombre: "Serbia", count: 18 },
+            { grupo: "SWE", nombre: "Suecia", count: 18 },
+            { grupo: "WAL", nombre: "Gales", count: 18 },
+            { grupo: "UKR", nombre: "Ucrania", count: 18 },
+
+            // ÁFRICA (CAF)
+            { grupo: "MAR", nombre: "Marruecos", count: 18 },
+            { grupo: "SEN", nombre: "Senegal", count: 18 },
+            { grupo: "TUN", nombre: "Túnez", count: 18 },
+            { grupo: "DZA", nombre: "Argelia", count: 18 },
+            { grupo: "NGA", nombre: "Nigeria", count: 18 },
+            { grupo: "CMR", nombre: "Camerún", count: 18 },
+            { grupo: "GHA", nombre: "Ghana", count: 18 },
+            { grupo: "CIV", nombre: "Costa de Marfil", count: 18 },
+            { grupo: "RSA", nombre: "Sudáfrica", count: 18 },
+            { grupo: "EGY", nombre: "Egipto", count: 18 },
+
+            // ASIA Y OCEANÍA (AFC / OFC)
+            { grupo: "JPN", nombre: "Japón", count: 18 },
+            { grupo: "KOR", nombre: "Corea del Sur", count: 18 },
+            { grupo: "IRN", nombre: "Irán", count: 18 },
+            { grupo: "KSA", nombre: "Arabia Saudita", count: 18 },
+            { grupo: "AUS", nombre: "Australia", count: 18 },
+            { grupo: "QAT", nombre: "Qatar", count: 18 },
+            { grupo: "UZB", nombre: "Uzbekistán", count: 18 },
+            { grupo: "NZL", nombre: "Nueva Zelanda", count: 18 }
         ];
 
         const STICKERS_BASE = [];
 
-        // 1. Especiales Inicio Reestablecidas Correctamente
+        // 1. Especiales de Inicio (00 0 al 00 19)
         for (let i = 0; i <= 19; i++) {
             STICKERS_BASE.push({
                 id: `00 ${i}`,
@@ -304,7 +314,7 @@
             });
         }
 
-        // 2. Bloques de Países
+        // 2. Inyección Dinámica de los 48 equipos sin omisiones
         PAISES_CONFIG.forEach(p => {
             for (let num = 1; num <= p.count; num++) {
                 let desc = `Jugador ${num} - ${p.nombre}`;
@@ -312,7 +322,7 @@
                 if (num === 1) {
                     desc = `Escudo Oficial de ${p.nombre}`;
                     tipo = "Escudo Holográfico";
-                } else if (num === 13) {
+                } else if (num === 10) {
                     desc = `Foto de Equipo (Squad) - ${p.nombre}`;
                     tipo = "Equipo Completo";
                 }
@@ -320,12 +330,12 @@
             }
         });
 
-        // 3. Coca-Cola Especiales
+        // 3. Sección Comercial Coca-Cola
         for (let i = 1; i <= 14; i++) {
             STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", grupo: "Coca-Cola" });
         }
         
-        // 4. Leyendas de Ajuste Reestablecidas para amarrar las 989 exactas
+        // 4. Bloque de Leyendas Históricas (Ajuste automático exacto al total de 989)
         const faltantesRelleno = 989 - STICKERS_BASE.length;
         for (let i = 1; i <= faltantesRelleno; i++) {
             STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", grupo: "Leyendas" });
