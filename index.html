@@ -3,175 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Panini Mundial 2026</title>
+    <title>Checklist Panini Mundial 2026</title>
     <style>
         :root {
-            --primary-color: #1a365d;
-            --secondary-color: #2b6cb0;
-            --accent-color: #319795;
-            --bg-light: #f7fafc;
+            --fifa-maroon: #8a1538;
+            --fifa-gold: #b39453;
+            --bg: #f4f7f6;
             --card-bg: #ffffff;
-            --text-main: #2d3748;
-            --border-color: #e2e8f0;
-            --have-color: #c6f6d5;
+            --text: #2d3748;
+            --have-bg: #c6f6d5;
             --have-text: #22543d;
-            --miss-color: #fed7d7;
-            --miss-text: #742a2a;
+            --border: #e2e8f0;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
 
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            padding: 20px;
-            line-height: 1.5;
+        /* Login Screen */
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--fifa-maroon), #5a0d24);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .login-card {
+            background: white; padding: 35px; border-radius: 15px; width: 90%; max-width: 380px;
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .login-card h2 { color: var(--fifa-maroon); margin-bottom: 25px; font-size: 1.8rem; }
+        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; }
+        .login-card button { 
+            width: 100%; padding: 12px; background: var(--fifa-maroon); color: white; 
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+        .login-card button:hover { background: #6b102b; }
+
+        /* App Layout */
+        .app-container { display: none; max-width: 1100px; margin: 0 auto; padding: 10px; }
+        
+        header { 
+            background: var(--fifa-maroon); color: white; padding: 20px; border-radius: 12px; 
+            margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 1.4rem; letter-spacing: 1px; }
+
+        .dashboard { 
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; margin-bottom: 15px; 
+        }
+        .kpi { background: white; padding: 12px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--fifa-gold); }
+        .kpi span { display: block; font-size: 1.4rem; font-weight: bold; color: var(--fifa-maroon); }
+        .kpi label { font-size: 0.7rem; color: #718096; text-transform: uppercase; font-weight: bold; }
+
+        /* Search & Filters */
+        .search-box {
+            background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px;
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; border: 1px solid var(--border);
+        }
+        .search-box input, .search-box select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
+
+        /* Grid */
+        .items-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+            gap: 10px; 
+        }
+        .sticker-card { 
+            background: white; border: 1px solid var(--border); border-radius: 8px;
+            padding: 12px 5px; text-align: center; cursor: pointer; transition: all 0.2s;
+            user-select: none; position: relative; overflow: hidden;
+        }
+        .sticker-card:active { transform: scale(0.95); }
+        .sticker-card.status-si { background: var(--have-bg); border-color: #48bb78; }
+        
+        .s-id { font-weight: 800; font-size: 1.1rem; color: var(--fifa-maroon); display: block; }
+        .s-desc { font-size: 0.65rem; color: #4a5568; margin-top: 5px; font-weight: 600; text-transform: uppercase; }
+        .s-group { font-size: 0.55rem; color: #a0aec0; margin-top: 3px; }
+
+        /* Badge for Escudo/Squad */
+        .badge {
+            position: absolute; top: 0; right: 0; background: var(--fifa-gold);
+            color: white; font-size: 0.5rem; padding: 2px 5px; border-bottom-left-radius: 5px;
         }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            header { flex-direction: column; text-align: center; gap: 12px; }
-            .filter-section { flex-direction: column; gap: 10px; }
-            .filter-section input, .filter-section select { width: 100%; }
-            .kpi-card { padding: 12px; }
-            .kpi-card .value { font-size: 1.4rem; }
-        }
-
-        .login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(26, 54, 93, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 15px;
-        }
-
-        .login-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .login-card h2 { margin-bottom: 20px; color: var(--primary-color); }
-        .login-card input {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            border: 1px solid var(--border-color); border-radius: 6px;
-            font-size: 16px;
-        }
-
-        .login-card button {
-            background: var(--secondary-color); color: white; border: none;
-            padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;
-            font-weight: bold; font-size: 16px;
-        }
-
-        .app-container { display: none; }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .kpi-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            border: 1px solid var(--border-color);
-        }
-
-        .kpi-card .value { font-size: 1.8rem; font-weight: bold; color: var(--primary-color); margin-top: 5px; }
-        .kpi-card .label { font-size: 0.85rem; color: #718096; text-transform: uppercase; font-weight: 600; }
-
-        .filter-section {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            border: 1px solid var(--border-color);
-            display: flex;
-            gap: 15px;
-        }
-
-        .filter-section input, .filter-section select {
-            padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;
-            font-size: 14px; background-color: #fff;
-        }
-
-        .section-counter-badge {
-            background-color: #edf2f7;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            color: #4a5568;
-            font-weight: 500;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-
-        .section-counter-badge.completed {
-            background-color: #c6f6d5;
-            border-color: #48bb78;
-            color: #22543d;
-        }
-
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
-            gap: 10px;
-        }
-
-        .sticker-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            user-select: none;
-        }
-
-        .sticker-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .sticker-card .sticker-id { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
-        .sticker-card .sticker-desc { font-size: 0.75rem; color: #4a5568; margin: 4px 0; min-height: 32px; display: flex; align-items: center; justify-content: center; }
-        .sticker-card .sticker-type { font-size: 0.65rem; color: #718096; background: #edf2f7; padding: 2px 4px; border-radius: 4px; display: inline-block; }
-
-        .sticker-card.status-si { background: var(--have-color); border-color: #48bb78; }
-        .sticker-card.status-si .sticker-id { color: var(--have-text); }
-        .sticker-card.status-si .sticker-type { background: rgba(255,255,255,0.5); color: var(--have-text); }
-
-        .toast {
-            position: fixed; bottom: 20px; right: 20px; background: #2d3748; color: white;
-            padding: 10px 20px; border-radius: 6px; display: none; z-index: 10000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            .search-box { grid-template-columns: 1fr; }
+            .items-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -179,353 +97,178 @@
 
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
-            <h2>CHECK LIST</h2>
-            <input type="text" id="usernameField" placeholder="Usuario">
+            <h2>🏆 CONTROL 2026</h2>
+            <input type="text" id="usernameField" placeholder="Nombre de Usuario">
             <input type="password" id="passwordField" placeholder="Contraseña">
-            <button onclick="loginUser()">Ingresar / Registrar</button>
+            <button onclick="loginUser()">INGRESAR AL ÁLBUM</button>
+            <p style="margin-top:15px; font-size:0.8rem; color:#666;">Los datos se guardan localmente en este navegador.</p>
         </div>
     </div>
 
     <div class="app-container" id="appContainer">
         <header>
             <div>
-                <h1>CHECK LIST</h1>
-                <p>Colección Panini Mundial 2026</p>
+                <h1>PANINI MUNDIAL 2026</h1>
+                <small id="userDisplay" style="color: var(--fifa-gold); font-weight: bold;"></small>
             </div>
-            <div style="text-align: right;">
-                <p style="margin-bottom: 5px;">Usuario: <span id="sessionUserLabel" style="font-weight:bold;">-</span></p>
-                <button onclick="logoutUser()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer;">Cerrar Sesión</button>
-            </div>
+            <button onclick="location.reload()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:8px 15px; border-radius:8px; cursor:pointer;">Cerrar Sesión</button>
         </header>
 
-        <div class="dashboard-grid">
-            <div class="kpi-card">
-                <div class="label">Total Álbum</div>
-                <div class="value" id="kpiTotal">0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="label">Tengo</div>
-                <div class="value" id="kpiTengo" style="color: #38a169;">0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="label">Faltan</div>
-                <div class="value" id="kpiFaltan" style="color: #e53e3e;">0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="label">Progreso</div>
-                <div class="value" id="kpiProgreso" style="color: #3182ce;">0%</div>
-            </div>
+        <div class="dashboard">
+            <div class="kpi"><span id="kpiTotal">0</span><label>Total</label></div>
+            <div class="kpi"><span id="kpiTengo">0</span><label>Tengo</label></div>
+            <div class="kpi"><span id="kpiFaltan">0</span><label>Faltan</label></div>
+            <div class="kpi"><span id="kpiProgreso">0%</span><label>Logro</label></div>
         </div>
 
-        <div class="filter-section">
-            <input type="text" id="searchBar" placeholder="Buscar estampa por código..." oninput="filterStickers()">
-            <select id="groupFilter" onchange="filterStickers()">
-                <option value="ALL">Todos los grupos</option>
+        <div class="search-box">
+            <input type="text" id="searchBar" placeholder="Buscar por código o país..." oninput="renderGrid()">
+            <select id="groupFilter" onchange="renderGrid()">
+                <option value="ALL">Todas las Secciones</option>
             </select>
-            <select id="statusFilter" onchange="filterStickers()">
-                <option value="ALL">Todos los estados</option>
+            <select id="statusFilter" onchange="renderGrid()">
+                <option value="ALL">Si y No</option>
                 <option value="SI">Tengo</option>
-                <option value="NO">No tengo</option>
+                <option value="NO">Faltan</option>
             </select>
-        </div>
-
-        <div class="section-counter-badge" id="sectionCounterBadge">
-            Filtrado actual: Mostrando todas las estampas.
         </div>
 
         <div class="items-grid" id="stickersGrid"></div>
     </div>
 
-    <div class="toast" id="toastMessage">Progreso guardado automáticamente.</div>
-
     <script>
-        // Los 48 países oficiales clasificados y divididos por confederación para el formato extendido de la FIFA
-        const PAISES_CONFIG = [
-            // NORTE, CENTROAMÉRICA Y CARIBE (CONCACAF)
-            { grupo: "USA", nombre: "Estados Unidos", count: 18 },
-            { grupo: "MEX", nombre: "México", count: 18 },
-            { grupo: "CAN", nombre: "Canadá", count: 18 },
-            { grupo: "CRC", nombre: "Costa Rica", count: 18 },
-            { grupo: "PAN", nombre: "Panamá", count: 18 },
-            { grupo: "JAM", nombre: "Jamaica", count: 18 },
-            { grupo: "HON", nombre: "Honduras", count: 18 },
-
-            // SUDAMÉRICA (CONMEBOL)
-            { grupo: "ARG", nombre: "Argentina", count: 18 },
-            { grupo: "BRA", nombre: "Brasil", count: 18 },
-            { grupo: "URU", nombre: "Uruguay", count: 18 },
-            { grupo: "COL", nombre: "Colombia", count: 18 },
-            { grupo: "ECU", nombre: "Ecuador", count: 18 },
-            { grupo: "PER", nombre: "Perú", count: 18 },
-            { grupo: "CHL", nombre: "Chile", count: 18 },
-            { grupo: "VEN", nombre: "Venezuela", count: 18 },
-            { grupo: "PAR", nombre: "Paraguay", count: 18 },
-
-            // EUROPA (UEFA)
-            { grupo: "FRA", nombre: "Francia", count: 18 },
-            { grupo: "ENG", nombre: "Inglaterra", count: 18 },
-            { grupo: "ESP", nombre: "España", count: 18 },
-            { grupo: "GER", nombre: "Alemania", count: 18 },
-            { grupo: "ITA", nombre: "Italia", count: 18 },
-            { grupo: "POR", nombre: "Portugal", count: 18 },
-            { grupo: "NED", nombre: "Países Bajos", count: 18 },
-            { grupo: "BEL", nombre: "Bélgica", count: 18 },
-            { grupo: "CRO", nombre: "Croacia", count: 18 },
-            { grupo: "SUI", nombre: "Suiza", count: 18 },
-            { grupo: "DEN", nombre: "Dinamarca", count: 18 },
-            { grupo: "AUT", nombre: "Austria", count: 18 },
-            { grupo: "SRB", nombre: "Serbia", count: 18 },
-            { grupo: "SWE", nombre: "Suecia", count: 18 },
-            { grupo: "WAL", nombre: "Gales", count: 18 },
-            { grupo: "UKR", nombre: "Ucrania", count: 18 },
-
-            // ÁFRICA (CAF)
-            { grupo: "MAR", nombre: "Marruecos", count: 18 },
-            { grupo: "SEN", nombre: "Senegal", count: 18 },
-            { grupo: "TUN", nombre: "Túnez", count: 18 },
-            { grupo: "DZA", nombre: "Argelia", count: 18 },
-            { grupo: "NGA", nombre: "Nigeria", count: 18 },
-            { grupo: "CMR", nombre: "Camerún", count: 18 },
-            { grupo: "GHA", nombre: "Ghana", count: 18 },
-            { grupo: "CIV", nombre: "Costa de Marfil", count: 18 },
-            { grupo: "RSA", nombre: "Sudáfrica", count: 18 },
-            { grupo: "EGY", nombre: "Egipto", count: 18 },
-
-            // ASIA Y OCEANÍA (AFC / OFC)
-            { grupo: "JPN", nombre: "Japón", count: 18 },
-            { grupo: "KOR", nombre: "Corea del Sur", count: 18 },
-            { grupo: "IRN", nombre: "Irán", count: 18 },
-            { grupo: "KSA", nombre: "Arabia Saudita", count: 18 },
-            { grupo: "AUS", nombre: "Australia", count: 18 },
-            { grupo: "QAT", nombre: "Qatar", count: 18 },
-            { grupo: "UZB", nombre: "Uzbekistán", count: 18 },
-            { grupo: "NZL", nombre: "Nueva Zelanda", count: 18 }
-        ];
+        // Lista exacta de 48 países según tu requerimiento (añadidos Venezuela e Irak para completar 48)
+        const LISTA_PAISES = [
+            { n: "Canadá", c: "CAN" }, { n: "Estados Unidos", c: "USA" }, { n: "México", c: "MEX" },
+            { n: "Argentina", c: "ARG" }, { n: "Brasil", c: "BRA" }, { n: "Colombia", c: "COL" },
+            { n: "Ecuador", c: "ECU" }, { n: "Paraguay", c: "PAR" }, { n: "Uruguay", c: "URU" },
+            { n: "Alemania", c: "GER" }, { n: "Austria", c: "AUT" }, { n: "Bélgica", c: "BEL" },
+            { n: "Bosnia y Herzegovina", c: "BIH" }, { n: "Croacia", c: "CRO" }, { n: "Escocia", c: "SCO" },
+            { n: "España", c: "ESP" }, { n: "Francia", c: "FRA" }, { n: "Inglaterra", c: "ENG" },
+            { n: "Noruega", c: "NOR" }, { n: "Países Bajos", c: "NED" }, { n: "Portugal", c: "POR" },
+            { n: "República Checa", c: "CZE" }, { n: "Suecia", c: "SWE" }, { n: "Suiza", c: "SUI" },
+            { n: "Turquía", c: "TUR" }, { n: "Curazao", c: "CUW" }, { n: "Haití", c: "HAI" },
+            { n: "Panamá", c: "PAN" }, { n: "Argelia", c: "ALG" }, { n: "Cabo Verde", c: "CPV" },
+            { n: "Costa de Marfil", c: "CIV" }, { n: "Egipto", c: "EGY" }, { n: "Ghana", c: "GHA" },
+            { n: "Marruecos", c: "MAR" }, { n: "Senegal", c: "SEN" }, { n: "Sudáfrica", c: "RSA" },
+            { n: "Túnez", c: "TUN" }, { n: "Arabia Saudita", c: "KSA" }, { n: "Australia", c: "AUS" },
+            { n: "Corea del Sur", c: "KOR" }, { n: "Emiratos Árabes", c: "UAE" }, { n: "Irán", c: "IRN" },
+            { n: "Japón", c: "JPN" }, { n: "Jordania", c: "JOR" }, { n: "Uzbekistán", c: "UZB" },
+            { n: "Nueva Zelanda", c: "NZL" }, { n: "Venezuela", c: "VEN" }, { n: "Irak", c: "IRQ" }
+        ].sort((a, b) => a.n.localeCompare(b.n));
 
         const STICKERS_BASE = [];
 
-        // 1. Especiales de Inicio (00 0 al 00 19)
+        // 1. FWC (00 + 1-19) = 20 estampas
         for (let i = 0; i <= 19; i++) {
-            STICKERS_BASE.push({
-                id: `00 ${i}`,
-                desc: i === 0 ? "Trofeo de la Copa del Mundo" : i === 1 ? "Logo Panini" : `Estampa Especial Conmemorativa ${i}`,
-                tipo: "Holográfica Especial",
-                grupo: "Especiales Inicio"
-            });
+            let label = i === 0 ? "00" : i;
+            STICKERS_BASE.push({ id: `FWC ${label}`, desc: (i==0 || i==19) ? "Especial FWC" : "FIFA Historico", grupo: "FWC" });
         }
 
-        // 2. Inyección Dinámica de los 48 equipos sin omisiones
-        PAISES_CONFIG.forEach(p => {
-            for (let num = 1; num <= p.count; num++) {
-                let desc = `Jugador ${num} - ${p.nombre}`;
-                let tipo = "Regular";
-                if (num === 1) {
-                    desc = `Escudo Oficial de ${p.nombre}`;
-                    tipo = "Escudo Holográfico";
-                } else if (num === 10) {
-                    desc = `Foto de Equipo (Squad) - ${p.nombre}`;
-                    tipo = "Equipo Completo";
-                }
-                STICKERS_BASE.push({ id: `${p.grupo} ${num}`, desc: desc, tipo: tipo, grupo: p.grupo });
+        // 2. Equipos (48 países * 20 estampas) = 960 estampas
+        LISTA_PAISES.forEach(p => {
+            for (let i = 1; i <= 20; i++) {
+                let d = `Jugador ${i}`;
+                let tag = "";
+                if(i === 1) { d = "Escudo"; tag = "ESCUDO"; }
+                if(i === 13) { d = "Equipo"; tag = "SQUAD"; }
+                STICKERS_BASE.push({ id: `${p.c} ${i}`, desc: d, grupo: p.n, tag: tag });
             }
         });
 
-        // 3. Sección Comercial Coca-Cola
+        // 3. Coca Cola = 14 estampas
         for (let i = 1; i <= 14; i++) {
-            STICKERS_BASE.push({ id: `CC ${i}`, desc: `Estampa Comercial Coca-Cola ${i}`, tipo: "Especial Comercial", grupo: "Coca-Cola" });
-        }
-        
-        // 4. Bloque de Leyendas Históricas (Ajuste automático exacto al total de 989)
-        const faltantesRelleno = 989 - STICKERS_BASE.length;
-        for (let i = 1; i <= faltantesRelleno; i++) {
-            STICKERS_BASE.push({ id: `LEG ${i}`, desc: `Jugador Leyenda Histórica Mundialista ${i}`, tipo: "Leyenda Gold", grupo: "Leyendas" });
+            STICKERS_BASE.push({ id: `CC ${i}`, desc: "Coca-Cola Especial", grupo: "COCA-COLA" });
         }
 
-        let userProgress = {};
-        let userPasswords = {}; 
+        // TOTAL: 20 + 960 + 14 = 994
+
+        let userProgress = JSON.parse(localStorage.getItem("panini_db_2026")) || {};
         let currentUser = null;
 
-        window.onload = function() {
-            loadStorage();
-            buildGroupFilter();
-        };
-
-        function loadStorage() {
-            const savedProgress = localStorage.getItem("gmt_panini_progress");
-            const savedPasswords = localStorage.getItem("gmt_panini_passwords");
-            
-            if(savedProgress) userProgress = JSON.parse(savedProgress);
-            if(savedPasswords) userPasswords = JSON.parse(savedPasswords);
-        }
-
-        function saveStorage() {
-            localStorage.setItem("gmt_panini_progress", JSON.stringify(userProgress));
-            localStorage.setItem("gmt_panini_passwords", JSON.stringify(userPasswords));
-        }
-
-        function buildGroupFilter() {
-            const filter = document.getElementById("groupFilter");
-            const distinctGroups = [...new Set(STICKERS_BASE.map(s => s.grupo))];
-            
-            distinctGroups.forEach(g => {
-                const opt = document.createElement("option");
-                opt.value = g;
-                opt.textContent = g;
-                filter.appendChild(opt);
-            });
-        }
-
         function loginUser() {
-            const username = document.getElementById("usernameField").value.trim();
-            const password = document.getElementById("passwordField").value.trim();
-
-            if (!username || !password) {
-                alert("Por favor ingresa usuario y contraseña.");
-                return;
-            }
-
-            if (userProgress[username] !== undefined) {
-                if (userPasswords[username] === password) {
-                    currentUser = username;
-                    showApp();
-                } else {
-                    alert("Contraseña incorrecta.");
-                }
-            } else {
-                userProgress[username] = {};
-                userPasswords[username] = password;
-                saveStorage();
-                currentUser = username;
-                alert("Nuevo perfil creado y registrado.");
-                showApp();
-            }
-        }
-
-        function showApp() {
+            const u = document.getElementById("usernameField").value.trim().toUpperCase();
+            if(!u) return alert("Ingresa un usuario");
+            currentUser = u;
+            if(!userProgress[currentUser]) userProgress[currentUser] = {};
+            
             document.getElementById("loginScreen").style.display = "none";
             document.getElementById("appContainer").style.display = "block";
-            document.getElementById("sessionUserLabel").textContent = currentUser;
+            document.getElementById("userDisplay").textContent = "USUARIO: " + currentUser;
+            
+            poblarFiltroGrupos();
             renderGrid();
-            calculateMetrics();
         }
 
-        function logoutUser() {
-            currentUser = null;
-            document.getElementById("appContainer").style.display = "none";
-            document.getElementById("loginScreen").style.display = "flex";
-            document.getElementById("usernameField").value = "";
-            document.getElementById("passwordField").value = "";
+        function poblarFiltroGrupos() {
+            const select = document.getElementById("groupFilter");
+            const grupos = [...new Set(STICKERS_BASE.map(s => s.grupo))];
+            grupos.forEach(g => {
+                const opt = document.createElement("option");
+                opt.value = g; opt.textContent = g;
+                select.appendChild(opt);
+            });
         }
 
-        function toggleSticker(id, cardElement) {
-            if(!currentUser) return;
-
-            const currentStatus = userProgress[currentUser][id] || "NO";
-            const newStatus = currentStatus === "SI" ? "NO" : "SI";
+        function toggleSticker(id, element) {
+            const actual = userProgress[currentUser][id] || "NO";
+            const nuevo = actual === "SI" ? "NO" : "SI";
+            userProgress[currentUser][id] = nuevo;
             
-            userProgress[currentUser][id] = newStatus;
-            cardElement.className = `sticker-card status-${newStatus.toLowerCase()}`;
+            if(nuevo === "SI") element.classList.add("status-si");
+            else element.classList.remove("status-si");
             
-            saveStorage();
-            calculateMetrics();
-            showToast();
+            localStorage.setItem("panini_db_2026", JSON.stringify(userProgress));
+            actualizarKPIs();
         }
 
-        function calculateMetrics() {
+        function actualizarKPIs() {
             const total = STICKERS_BASE.length;
-            const currentMap = userProgress[currentUser] || {};
-            
             let tengo = 0;
             STICKERS_BASE.forEach(s => {
-                if (currentMap[s.id] === "SI") tengo++;
+                if(userProgress[currentUser][s.id] === "SI") tengo++;
             });
-
-            const faltan = total - tengo;
-            const porcentaje = total > 0 ? ((tengo / total) * 100).toFixed(1) : 0;
 
             document.getElementById("kpiTotal").textContent = total;
             document.getElementById("kpiTengo").textContent = tengo;
-            document.getElementById("kpiFaltan").textContent = faltan;
-            document.getElementById("kpiProgreso").textContent = `${porcentaje}%`;
-
-            updateSectionCounter();
-        }
-
-        function updateSectionCounter() {
-            const groupSel = document.getElementById("groupFilter").value;
-            const currentMap = userProgress[currentUser] || {};
-            
-            let filteredStickers = STICKERS_BASE;
-            if (groupSel !== "ALL") {
-                filteredStickers = STICKERS_BASE.filter(s => s.grupo === groupSel);
-            }
-
-            let totalSec = filteredStickers.length;
-            let tengoSec = filteredStickers.filter(s => currentMap[s.id] === "SI").length;
-            let faltanSec = totalSec - tengoSec;
-            
-            let porcSec = totalSec > 0 ? ((tengoSec / totalSec) * 100).toFixed(1) : 0;
-
-            const labelBadge = document.getElementById("sectionCounterBadge");
-            
-            if (tengoSec === totalSec && totalSec > 0) {
-                labelBadge.className = "section-counter-badge completed";
-                if (groupSel === "ALL") {
-                    labelBadge.innerHTML = `🎉 <strong>¡ÁLBUM COMPLETADO AL 100%!</strong> | Total: ${totalSec} | Tienes: ${tengoSec} | Faltan: ${faltanSec}`;
-                } else {
-                    labelBadge.innerHTML = `🎉 <strong>¡Sección [ ${groupSel} ] Completada! (100%)</strong> | Tienes las ${tengoSec} estampas registradas.`;
-                }
-            } else {
-                labelBadge.className = "section-counter-badge";
-                if (groupSel === "ALL") {
-                    labelBadge.innerHTML = `🌍 <strong>Sección: Todas las Secciones</strong> | Total en vista: ${totalSec} | Tienes: <strong>${tengoSec}</strong> | Te faltan: <strong>${faltanSec}</strong> | Progreso: <strong>${porcSec}%</strong>`;
-                } else {
-                    labelBadge.innerHTML = `🔍 <strong>Sección [ ${groupSel} ]</strong> | Total: ${totalSec} | Tienes: <strong style="color:#22543d">${tengoSec}</strong> | Faltan: <strong style="color:#742a2a">${faltanSec}</strong> | Completado: <strong>${porcSec}%</strong>`;
-                }
-            }
+            document.getElementById("kpiFaltan").textContent = total - tengo;
+            document.getElementById("kpiProgreso").textContent = Math.round((tengo/total)*100) + "%";
         }
 
         function renderGrid() {
             const grid = document.getElementById("stickersGrid");
+            const busqueda = document.getElementById("searchBar").value.toLowerCase();
+            const filtroG = document.getElementById("groupFilter").value;
+            const filtroS = document.getElementById("statusFilter").value;
+            
             grid.innerHTML = "";
-
-            const query = document.getElementById("searchBar").value.toLowerCase().trim();
-            const groupSel = document.getElementById("groupFilter").value;
-            const statusSel = document.getElementById("statusFilter").value;
-
-            const currentMap = userProgress[currentUser] || {};
+            const fragmento = document.createDocumentFragment();
 
             STICKERS_BASE.forEach(s => {
-                const status = currentMap[s.id] || "NO";
-
-                if(query && !s.id.toLowerCase().includes(query) && !s.desc.toLowerCase().includes(query)) return;
-                if(groupSel !== "ALL" && s.grupo !== groupSel) return;
-                if(statusSel !== "ALL" && status !== statusSel) return;
+                const status = userProgress[currentUser][s.id] || "NO";
+                
+                // Filtros
+                if(filtroG !== "ALL" && s.grupo !== filtroG) return;
+                if(filtroS !== "ALL" && status !== filtroS) return;
+                if(busqueda && !s.id.toLowerCase().includes(busqueda) && !s.grupo.toLowerCase().includes(busqueda)) return;
 
                 const card = document.createElement("div");
-                card.className = `sticker-card status-${status.toLowerCase()}`;
+                card.className = `sticker-card ${status === 'SI' ? 'status-si' : ''}`;
                 card.onclick = () => toggleSticker(s.id, card);
-
+                
+                let badgeHTML = s.tag ? `<div class="badge">${s.tag}</div>` : "";
+                
                 card.innerHTML = `
-                    <div class="sticker-id">${s.id}</div>
-                    <div class="sticker-desc">${s.desc}</div>
-                    <div class="sticker-type">${s.tipo}</div>
+                    ${badgeHTML}
+                    <span class="s-id">${s.id}</span>
+                    <span class="s-desc">${s.desc}</span>
+                    <span class="s-group">${s.grupo}</span>
                 `;
-
-                grid.appendChild(card);
+                fragmento.appendChild(card);
             });
-
-            updateSectionCounter();
-        }
-
-        function filterStickers() {
-            renderGrid();
-        }
-
-        function showToast() {
-            const toast = document.getElementById("toastMessage");
-            toast.style.display = "block";
-            setTimeout(() => { toast.style.display = "none"; }, 1500);
+            
+            grid.appendChild(fragmento);
+            actualizarKPIs();
         }
     </script>
 </body>
