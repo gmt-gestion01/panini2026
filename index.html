@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUNDIAL 2026 - Panini Checklist</title>
+    <title>Mundial 2026 - Panini Checklist</title>
     
-    <!-- Librerías de Animación -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
 
@@ -15,24 +14,30 @@
             --mex-green: #006341; 
             --can-red: #EF3340;
             --fifa-gold: #d4af37;
-            --glass: rgba(255, 255, 255, 0.82);
+            --glass: rgba(255, 255, 255, 0.85);
             --have-bg: #dcfce7;
             --have-border: #16a34a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-        /* Contenedor del fondo animado */
-        #vanta-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+        /* Efecto de borde blanco para números */
+        .num-stroke {
+            text-shadow: 
+                -1.5px -1.5px 0 #fff,  
+                 1.5px -1.5px 0 #fff,
+                -1.5px  1.5px 0 #fff,
+                 1.5px  1.5px 0 #fff,
+                 0px 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Capa Bandera Tricolor con VERDE REFORZADO */
+        #vanta-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+
         .flag-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, 
                 rgba(0, 40, 104, 0.35) 0%, 
-                rgba(0, 99, 65, 0.7) 40%,  /* Verde intenso de México */
+                rgba(0, 99, 65, 0.7) 40%, 
                 rgba(0, 99, 65, 0.7) 60%, 
                 rgba(239, 51, 64, 0.35) 100%);
             z-index: -1; pointer-events: none;
@@ -40,7 +45,7 @@
 
         body { color: #1a202c; min-height: 100vh; overflow-x: hidden; }
 
-        /* Estilo Glassmorphism Redondeado */
+        /* Login */
         .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; }
         .login-card {
             background: var(--glass); backdrop-filter: blur(25px);
@@ -52,7 +57,6 @@
         .login-card h2 { color: var(--usa-blue); font-weight: 900; font-size: 2.5rem; letter-spacing: -1px; }
 
         input, select { padding: 12px 25px; border-radius: 30px; border: 1px solid rgba(0,0,0,0.1); outline: none; font-weight: 600; }
-        
         .btn-main { 
             width: 100%; padding: 15px; background: var(--usa-blue); color: white; 
             border: none; border-radius: 30px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
@@ -61,67 +65,90 @@
         .btn-main:hover { background: var(--mex-green); transform: scale(1.03); }
 
         /* App Layout */
-        .app-container { display: none; padding: 25px; max-width: 1200px; margin: 0 auto; }
+        .app-container { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
         
         header { 
             background: var(--glass); backdrop-filter: blur(15px);
-            padding: 20px 40px; border-radius: 100px; margin-bottom: 30px;
+            padding: 15px 40px; border-radius: 100px; margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid white;
         }
 
         .dashboard { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 15px; margin-bottom: 30px; 
+            gap: 15px; margin-bottom: 15px; 
         }
-        .kpi { background: var(--glass); backdrop-filter: blur(10px); padding: 20px; border-radius: 35px; text-align: center; border: 1px solid white; }
-        .kpi span { display: block; font-size: 1.8rem; font-weight: 900; margin-bottom: 5px; }
-        .kpi label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #444; }
+        .kpi { background: var(--glass); backdrop-filter: blur(10px); padding: 15px; border-radius: 35px; text-align: center; border: 1px solid white; }
+        .kpi span { display: block; font-size: 1.8rem; font-weight: 900; margin-bottom: 2px; }
+        .kpi label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #333; }
+        .kpi .rest-val { font-size: 0.75rem; font-weight: 900; }
+
+        /* Panel de Detalle por Sección */
+        #sectionDetailPanel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 25px 35px;
+            margin-bottom: 25px;
+            border: 2.5px solid var(--fifa-gold);
+            display: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        #sectionDetailPanel.complete-glass {
+            background: rgba(0, 99, 65, 0.25);
+            border-color: var(--mex-green);
+        }
+
+        .sec-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .sec-title { font-weight: 900; font-size: 1.5rem; color: var(--usa-blue); text-transform: uppercase; text-shadow: 0 2px 4px rgba(255,255,255,0.8); }
+        .sec-stats { font-weight: 800; font-size: 1rem; color: #111; }
+        .status-badge { padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; display: none; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        
+        .progress-container { width: 100%; background: rgba(0,0,0,0.1); height: 16px; border-radius: 10px; margin-top: 15px; overflow: hidden; border: 1.5px solid white; }
+        .progress-bar { height: 100%; background: var(--mex-green); width: 0%; transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .search-box {
-            background: var(--glass); padding: 20px 30px; border-radius: 50px; margin-bottom: 30px;
+            background: var(--glass); padding: 15px 30px; border-radius: 50px; margin-bottom: 25px;
             display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; border: 1px solid white;
         }
 
-        /* Estampas (No cuadradas) */
-        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 15px; }
+        /* Estampas */
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
         .sticker-card { 
-            background: white; border-radius: 35px; padding: 25px 10px;
+            background: white; border-radius: 35px; padding: 22px 5px;
             text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05); position: relative; border: 2px solid transparent;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05); position: relative; border: 2px solid transparent;
         }
-        .sticker-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
-
-        /* Palomitas Animadas Instantáneas */
         .sticker-card.status-si { background: var(--have-bg); border-color: var(--have-border); }
         .sticker-card.status-si::before {
-            content: '✓';
-            position: absolute; top: 12px; left: 18px;
+            content: '✓'; position: absolute; top: 10px; left: 15px;
             background: var(--have-border); color: white;
-            width: 26px; height: 26px; border-radius: 50%;
+            width: 24px; height: 24px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: bold;
-            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 12px; font-weight: bold; animation: popIn 0.25s ease;
             z-index: 2;
         }
 
         @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
         
-        .s-id { font-weight: 900; font-size: 1.4rem; color: var(--usa-blue); }
-        .s-desc { font-size: 0.7rem; color: #4a5568; margin-top: 5px; font-weight: 800; text-transform: uppercase; }
-        .s-group { font-size: 0.6rem; color: #888; margin-top: 3px; font-weight: 700; }
+        .s-id { font-weight: 900; font-size: 1.3rem; color: var(--usa-blue); }
+        .s-desc { font-size: 0.65rem; color: #4a5568; margin-top: 5px; font-weight: 800; text-transform: uppercase; }
+        .s-group { font-size: 0.55rem; color: #888; margin-top: 3px; font-weight: 700; }
 
         .badge {
             position: absolute; top: -5px; right: -5px; background: var(--fifa-gold);
-            color: white; font-size: 0.65rem; padding: 5px 12px; border-radius: 20px;
+            color: white; font-size: 0.6rem; padding: 4px 10px; border-radius: 20px;
             font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 3;
         }
 
         @media (max-width: 600px) {
             .search-box { grid-template-columns: 1fr; border-radius: 30px; }
-            .items-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            header { padding: 15px 25px; border-radius: 40px; flex-direction: column; text-align: center; gap: 10px; }
-            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            .items-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            header { padding: 15px 25px; border-radius: 40px; flex-direction: column; text-align: center; gap: 8px; }
+            .dashboard { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .sec-header { justify-content: center; text-align: center; }
         }
     </style>
 </head>
@@ -133,7 +160,7 @@
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
             <h2>MUNDIAL 2026</h2>
-            <p style="color:#444; font-weight:800; text-transform: uppercase;">Checklist 994 Estampas</p><br>
+            <p style="color:#222; font-weight:800; text-transform: uppercase;">Álbum Digital 994</p><br>
             <input type="text" id="usernameField" placeholder="Usuario">
             <input type="password" id="passwordField" placeholder="Contraseña">
             <button class="btn-main" onclick="loginUser()">INGRESAR AL ÁLBUM</button>
@@ -143,21 +170,46 @@
     <div class="app-container" id="appContainer">
         <header>
             <div>
-                <h1 style="color: var(--usa-blue); font-weight: 900;">🏆 MUNDIAL 2026</h1>
+                <h1 style="color: var(--usa-blue); font-weight: 900; letter-spacing: -0.5px;">🏆 MUNDIAL 2026</h1>
                 <small id="userDisplay" style="color: var(--mex-green); font-weight: 900; text-transform: uppercase; letter-spacing: 1px;"></small>
             </div>
-            <button onclick="location.reload()" style="background: var(--can-red); color: white; padding: 12px 25px; border: none; border-radius: 50px; font-weight: 800; cursor: pointer;">SALIR</button>
+            <button onclick="location.reload()" style="background: var(--can-red); color: white; padding: 10px 22px; border: none; border-radius: 50px; font-weight: 800; cursor: pointer; font-size: 0.8rem;">SALIR</button>
         </header>
 
         <div class="dashboard">
-            <div class="kpi"><span id="kpiTotal" style="color: var(--usa-blue);">0</span><label>Total</label></div>
-            <div class="kpi"><span id="kpiTengo" style="color: var(--mex-green);">0</span><label>Tengo</label></div>
-            <div class="kpi"><span id="kpiFaltan" style="color: var(--can-red);">0</span><label>Faltan</label></div>
-            <div class="kpi"><span id="kpiProgreso" style="color: var(--fifa-gold);">0.00%</span><label>Logro</label></div>
+            <div class="kpi"><span id="kpiTotal" class="num-stroke" style="color: var(--usa-blue);">0</span><label>Total</label></div>
+            <div class="kpi"><span id="kpiTengo" class="num-stroke" style="color: var(--mex-green);">0</span><label>Tengo</label></div>
+            <div class="kpi">
+                <span id="kpiFaltan" class="num-stroke" style="color: var(--can-red);">0</span>
+                <div class="rest-val" style="color: var(--can-red);">FALTANTE: <span id="generalRestPerc" class="num-stroke">0%</span></div>
+            </div>
+            <div class="kpi">
+                <span id="kpiProgreso" class="num-stroke" style="color: var(--mex-green);">0.00%</span>
+                <label id="generalStatusLabel" style="font-weight: 900;">AVANCE TOTAL</label>
+            </div>
+        </div>
+
+        <!-- DETALLE DINÁMICO DE SECCIÓN -->
+        <div id="sectionDetailPanel">
+            <div class="sec-header">
+                <div>
+                    <span class="status-badge" id="detailBadge" style="background: var(--mex-green); color: white; border: 1.5px solid white;">¡SECCIÓN COMPLETADA!</span>
+                    <div class="sec-title" id="detailTitle">SECCIÓN</div>
+                </div>
+                <div class="sec-stats">
+                    Tengo: <span id="detailTengo" class="num-stroke" style="color:var(--mex-green)">0</span> | 
+                    Faltan: <span id="detailFaltan" class="num-stroke" style="color:var(--can-red)">0</span> | 
+                    <span style="color: var(--can-red);">Faltante: <span id="detailRest" class="num-stroke">0%</span></span>
+                </div>
+                <div style="font-weight: 900; color: var(--mex-green); font-size: 1.4rem;" id="detailPerc" class="num-stroke">0%</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="detailBar"></div>
+            </div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="searchBar" placeholder="🔍 Buscar código o país..." oninput="renderGrid()">
+            <input type="text" id="searchBar" placeholder="🔍 Buscar código o equipo..." oninput="renderGrid()">
             <select id="groupFilter" onchange="renderGrid()">
                 <option value="ALL">📍 Todas las Secciones</option>
             </select>
@@ -172,24 +224,12 @@
     </div>
 
     <script>
-        // Animación Vanta Waves (Efecto bandera ondulante)
         VANTA.WAVES({
-            el: "#vanta-canvas",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x051a30,
-            shininess: 45.00,
-            waveHeight: 22.00,
-            waveSpeed: 0.85,
-            zoom: 0.95
+            el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false,
+            minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00,
+            color: 0x051a30, shininess: 45.00, waveHeight: 22.00, waveSpeed: 0.85, zoom: 0.95
         });
 
-        // LISTA DE LOS 48 EQUIPOS OFICIALES (SEGÚN TU CONFIGURACIÓN)
         const LISTA_PAISES = [
             { n: "Canadá", c: "CAN" }, { n: "Estados Unidos", c: "USA" }, { n: "México", c: "MEX" },
             { n: "Argentina", c: "ARG" }, { n: "Brasil", c: "BRA" }, { n: "Colombia", c: "COL" },
@@ -209,26 +249,19 @@
         ].sort((a, b) => a.n.localeCompare(b.n));
 
         const STICKERS_BASE = [];
-        // 1. Especiales FWC (20 estampas: 00 y 1-19)
         for (let i = 0; i <= 19; i++) {
             let label = i === 0 ? "00" : i;
             STICKERS_BASE.push({ id: `FWC ${label}`, desc: (i==0||i==19)?"Especial":"FIFA", grupo: "FWC" });
         }
-        // 2. Equipos (48 países * 20 estampas = 960)
         LISTA_PAISES.forEach(p => {
             for (let i = 1; i <= 20; i++) {
-                let d = `Jugador ${i}`; let tag = "";
-                if(i === 1) { d = "Escudo"; tag = "ESC"; }
-                if(i === 13) { d = "Equipo"; tag = "SQD"; }
+                let d = `Jugador ${i}`; let tag = (i===1)?"ESC":(i===13)?"SQD":"";
                 STICKERS_BASE.push({ id: `${p.c} ${i}`, desc: d, grupo: p.n, tag: tag });
             }
         });
-        // 3. Coca-Cola (14 estampas)
-        for (let i = 1; i <= 14; i++) {
-            STICKERS_BASE.push({ id: `CC ${i}`, desc: "Coca-Cola", grupo: "COCA-COLA" });
-        }
+        for (let i = 1; i <= 14; i++) STICKERS_BASE.push({ id: `CC ${i}`, desc: "Coca-Cola", grupo: "COCA-COLA" });
 
-        let userProgress = JSON.parse(localStorage.getItem("MUNDIAL_2026_final_save")) || {};
+        let userProgress = JSON.parse(localStorage.getItem("mundial_2026_v11")) || {};
         let currentUser = null;
 
         function loginUser() {
@@ -238,7 +271,7 @@
             if(!userProgress[currentUser]) userProgress[currentUser] = {};
             document.getElementById("loginScreen").style.display = "none";
             document.getElementById("appContainer").style.display = "block";
-            document.getElementById("userDisplay").textContent = "Usuario: " + currentUser;
+            document.getElementById("userDisplay").textContent = "Coleccionista: " + currentUser;
             poblarFiltroGrupos();
             renderGrid();
         }
@@ -258,7 +291,7 @@
             const nuevo = actual === "SI" ? "NO" : "SI";
             userProgress[currentUser][id] = nuevo;
             element.classList.toggle("status-si");
-            localStorage.setItem("MUNDIAL_2026_final_save", JSON.stringify(userProgress));
+            localStorage.setItem("mundial_2026_v11", JSON.stringify(userProgress));
             actualizarKPIs();
         }
 
@@ -266,12 +299,66 @@
             const total = STICKERS_BASE.length;
             let tengo = 0;
             STICKERS_BASE.forEach(s => { if(userProgress[currentUser][s.id] === "SI") tengo++; });
+            
+            const faltan = total - tengo;
+            const percTengo = ((tengo / total) * 100);
+            const percFaltan = (100 - percTengo).toFixed(2);
+
             document.getElementById("kpiTotal").textContent = total;
             document.getElementById("kpiTengo").textContent = tengo;
-            document.getElementById("kpiFaltan").textContent = total - tengo;
-            // PORCENTAJE CON 2 DECIMALES
-            const porcentaje = ((tengo / total) * 100).toFixed(2);
-            document.getElementById("kpiProgreso").textContent = porcentaje + "%";
+            document.getElementById("kpiFaltan").textContent = faltan;
+            document.getElementById("generalRestPerc").textContent = percFaltan + "%";
+            
+            const kpiProg = document.getElementById("kpiProgreso");
+            const labelProg = document.getElementById("generalStatusLabel");
+            
+            kpiProg.textContent = percTengo.toFixed(2) + "%";
+
+            if (percTengo >= 100) {
+                labelProg.textContent = "¡ÁLBUM COMPLETADO!";
+                labelProg.style.color = "var(--mex-green)";
+            } else {
+                labelProg.textContent = "AVANCE TOTAL";
+                labelProg.style.color = "#111";
+            }
+
+            actualizarDetalleSeccion();
+        }
+
+        function actualizarDetalleSeccion() {
+            const filtroG = document.getElementById("groupFilter").value;
+            const panel = document.getElementById("sectionDetailPanel");
+            
+            if (filtroG === "ALL") {
+                panel.style.display = "none";
+                return;
+            }
+
+            panel.style.display = "block";
+            const stickersSeccion = STICKERS_BASE.filter(s => s.grupo === filtroG);
+            const totalS = stickersSeccion.length;
+            let tengoS = 0;
+            stickersSeccion.forEach(s => { if(userProgress[currentUser][s.id] === "SI") tengoS++; });
+            
+            const faltanS = totalS - tengoS;
+            const percS = ((tengoS / totalS) * 100);
+            const restS = (100 - percS).toFixed(2);
+
+            document.getElementById("detailTitle").textContent = filtroG;
+            document.getElementById("detailTengo").textContent = tengoS;
+            document.getElementById("detailFaltan").textContent = faltanS;
+            document.getElementById("detailRest").textContent = restS + "%";
+            document.getElementById("detailPerc").textContent = percS.toFixed(2) + "%";
+            document.getElementById("detailBar").style.width = percS + "%";
+
+            const badge = document.getElementById("detailBadge");
+            if (percS >= 100) {
+                panel.classList.add("complete-glass");
+                badge.style.display = "inline-block";
+            } else {
+                panel.classList.remove("complete-glass");
+                badge.style.display = "none";
+            }
         }
 
         function renderGrid() {
