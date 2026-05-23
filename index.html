@@ -189,7 +189,6 @@
             </div>
         </div>
 
-        <!-- DETALLE DINÁMICO DE SECCIÓN -->
         <div id="sectionDetailPanel">
             <div class="sec-header">
                 <div>
@@ -231,22 +230,31 @@
         });
 
         const LISTA_PAISES = [
-            { n: "Canadá", c: "CAN" }, { n: "Estados Unidos", c: "USA" }, { n: "México", c: "MEX" },
-            { n: "Argentina", c: "ARG" }, { n: "Brasil", c: "BRA" }, { n: "Colombia", c: "COL" },
-            { n: "Ecuador", c: "ECU" }, { n: "Paraguay", c: "PAR" }, { n: "Uruguay", c: "URU" }, { n: "Venezuela", c: "VEN" },
-            { n: "Alemania", c: "GER" }, { n: "Austria", c: "AUT" }, { n: "Bélgica", c: "BEL" },
-            { n: "Bosnia y Herzegovina", c: "BIH" }, { n: "Croacia", c: "CRO" }, { n: "Escocia", c: "SCO" },
-            { n: "España", c: "ESP" }, { n: "Francia", c: "FRA" }, { n: "Inglaterra", c: "ENG" },
-            { n: "Noruega", c: "NOR" }, { n: "Países Bajos", c: "NED" }, { n: "Portugal", c: "POR" },
-            { n: "República Checa", c: "CZE" }, { n: "Suecia", c: "SWE" }, { n: "Suiza", c: "SUI" }, { n: "Turquía", c: "TUR" },
-            { n: "Curazao", c: "CUW" }, { n: "Haití", c: "HAI" }, { n: "Panamá", c: "PAN" },
-            { n: "Argelia", c: "ALG" }, { n: "Cabo Verde", c: "CPV" }, { n: "Costa de Marfil", c: "CIV" },
-            { n: "Egipto", c: "EGY" }, { n: "Ghana", c: "GHA" }, { n: "Marruecos", c: "MAR" },
-            { n: "Senegal", c: "SEN" }, { n: "Sudáfrica", c: "RSA" }, { n: "Túnez", c: "TUN" },
-            { n: "Arabia Saudita", c: "KSA" }, { n: "Australia", c: "AUS" }, { n: "Corea del Sur", c: "KOR" },
-            { n: "Emiratos Árabes", c: "UAE" }, { n: "Qatar", c: "QAT" }, { n: "Irán", c: "IRN" },
-            { n: "Japón", c: "JPN" }, { n: "Jordania", c: "JOR" }, { n: "Uzbekistán", c: "UZB" }, { n: "Nueva Zelanda", c: "NZL" }
-        ].sort((a, b) => a.n.localeCompare(b.n));
+            // Grupo A
+            { n: "Mexico", c: "MEX" }, { n: "South Africa", c: "RSA" }, { n: "Korea Republic", c: "KOR" }, { n: "Czechia", c: "CZE" },
+            // Grupo B
+            { n: "Canada", c: "CAN" }, { n: "Bosnia-Herzegovina", c: "BIH" }, { n: "Qatar", c: "QAT" }, { n: "Switzerland", c: "SUI" },
+            // Grupo C
+            { n: "Brazil", c: "BRA" }, { n: "Morocco", c: "MAR" }, { n: "Haiti", c: "HAI" }, { n: "Scotland", c: "SCO" },
+            // Grupo D
+            { n: "USA", c: "USA" }, { n: "Paraguay", c: "PAR" }, { n: "Australia", c: "AUS" }, { n: "Türkiye", c: "TUR" },
+            // Grupo E
+            { n: "Germany", c: "GER" }, { n: "Curaçao", c: "CUW" }, { n: "Côte d'Ivoire", c: "CIV" }, { n: "Ecuador", c: "ECU" },
+            // Grupo F
+            { n: "Netherlands", c: "NED" }, { n: "Japan", c: "JPN" }, { n: "Sweden", c: "SWE" }, { n: "Tunisia", c: "TUN" },
+            // Grupo G
+            { n: "Belgium", c: "BEL" }, { n: "Egypt", c: "EGY" }, { n: "IR Iran", c: "IRN" }, { n: "New Zealand", c: "NZL" },
+            // Grupo H
+            { n: "Spain", c: "ESP" }, { n: "Cabo Verde", c: "CPV" }, { n: "Saudi Arabia", c: "KSA" }, { n: "Uruguay", c: "URU" },
+            // Grupo I
+            { n: "France", c: "FRA" }, { n: "Senegal", c: "SEN" }, { n: "Iraq", c: "IRQ" }, { n: "Norway", c: "NOR" },
+            // Grupo J
+            { n: "Argentina", c: "ARG" }, { n: "Algeria", c: "ALG" }, { n: "Austria", c: "AUT" }, { n: "Jordan", c: "JOR" },
+            // Grupo K
+            { n: "Portugal", c: "POR" }, { n: "Congo DR", c: "COD" }, { n: "Uzbekistan", c: "UZB" }, { n: "Colombia", c: "COL" },
+            // Grupo L
+            { n: "England", c: "ENG" }, { n: "Croatia", c: "CRO" }, { n: "Ghana", c: "GHA" }, { n: "Panama", c: "PAN" }
+        ];
 
         const STICKERS_BASE = [];
         for (let i = 0; i <= 19; i++) {
